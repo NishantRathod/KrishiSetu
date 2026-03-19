@@ -19,10 +19,11 @@ KrishiSetu is a comprehensive web platform designed to connect farmers, agricult
 - JavaScript (Vanilla JS)
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
-- JWT Authentication
+- Python 3.8+
+- Flask (Web Framework)
+- MongoDB (PyMongo)
+- Flask-JWT-Extended (JWT Authentication)
+- bcrypt (Password Hashing)
 
 ## Getting Started
 
@@ -48,22 +49,35 @@ npx http-server -p 3000
 cd backend
 ```
 
-4. Install dependencies
+4. Create a virtual environment (recommended)
 ```bash
-npm install
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-5. Create `.env` file from example
+5. Install Python dependencies
+```bash
+pip install -r requirements.txt
+```
+
+6. Create `.env` file from example
 ```bash
 cp .env.example .env
 ```
 
-6. Start the backend server
+7. Make sure MongoDB is running (locally or use MongoDB Atlas)
+
+8. Start the backend server
 ```bash
-npm run dev  # Development mode with auto-reload
-# or
-npm start    # Production mode
+python app.py
 ```
+
+The API will be available at `http://localhost:5000`
 
 ## Project Structure
 
@@ -80,27 +94,51 @@ KrishiSetu/
 │   │   └── app.js        # Application logic
 │   └── README.md         # Frontend documentation
 │
-├── backend/              # Backend API server
-│   ├── server.js         # Main server file
-│   ├── package.json      # Dependencies
+├── backend/              # Backend API server (Flask/Python)
+│   ├── app.py            # Main application file
+│   ├── config.py         # Configuration settings
+│   ├── database.py       # Database connection
+│   ├── requirements.txt  # Python dependencies
 │   ├── .env.example      # Environment variables template
+│   ├── models/           # Database models
+│   │   ├── user.py       # User model
+│   │   ├── crop.py       # Crop model
+│   │   └── product.py    # Product model
+│   ├── routes/           # API routes
+│   │   ├── auth.py       # Authentication routes
+│   │   ├── crops.py      # Crop management routes
+│   │   ├── marketplace.py # Marketplace routes
+│   │   └── users.py      # User profile routes
 │   └── README.md         # Backend documentation
 │
 ├── .gitignore
 └── README.md
 ```
 
+## API Endpoints
+
+The backend provides the following REST API endpoints:
+
+- **Authentication**: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+- **Crops**: `/api/crops/` (GET, POST), `/api/crops/<id>` (GET)
+- **Marketplace**: `/api/marketplace/products` (GET, POST), `/api/marketplace/my-products` (GET)
+- **Users**: `/api/users/profile` (GET, PUT)
+
+See `backend/README.md` for detailed API documentation.
+
 ## Future Enhancements
 
-- ✅ Backend structure with Node.js and Express (In Progress)
-- Database integration with MongoDB
-- User authentication API with JWT
-- REST API for crops and marketplace
-- Real-time chat support using Socket.io
-- Weather API integration
-- Crop disease detection using Machine Learning
-- Mobile app development
-- Payment gateway integration
+- ✅ Python Flask Backend with REST API (Completed)
+- ✅ MongoDB Integration (Completed)
+- ✅ JWT Authentication (Completed)
+- ✅ User, Crop, and Product Models (Completed)
+- [ ] File upload for product images
+- [ ] Real-time notifications using WebSockets
+- [ ] Weather API integration
+- [ ] Crop disease detection using Machine Learning
+- [ ] Mobile app development (React Native/Flutter)
+- [ ] Payment gateway integration
+- [ ] Email verification and password reset
 
 ## Contributing
 
