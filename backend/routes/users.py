@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.user import User
 from database import Database
+from bson import ObjectId
+from datetime import datetime
 
 users_bp = Blueprint('users', __name__)
 
@@ -51,11 +53,10 @@ def update_profile():
             update_data['phone'] = data['phone']
 
         if update_data:
-            from datetime import datetime
             update_data['updated_at'] = datetime.utcnow()
 
             db.users.update_one(
-                {'_id': user_id},
+                {'_id': ObjectId(user_id)},
                 {'$set': update_data}
             )
 

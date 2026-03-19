@@ -1,5 +1,6 @@
 from datetime import datetime
 from database import Database
+from bson import ObjectId
 
 class Crop:
     """Crop model"""
@@ -47,6 +48,5 @@ class Crop:
     @staticmethod
     def find_by_id(crop_id):
         """Find crop by ID"""
-        from bson import ObjectId
         db = Database.get_db()
         return db.crops.find_one({'_id': ObjectId(crop_id)})

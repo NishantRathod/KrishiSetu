@@ -1,5 +1,6 @@
 from datetime import datetime
 from database import Database
+from bson import ObjectId
 import bcrypt
 
 class User:
@@ -48,6 +49,5 @@ class User:
     @staticmethod
     def find_by_id(user_id):
         """Find user by ID"""
-        from bson import ObjectId
         db = Database.get_db()
         return db.users.find_one({'_id': ObjectId(user_id)})
