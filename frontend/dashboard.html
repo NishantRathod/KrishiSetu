@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard – KrishiSetu</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/notifications.css" />
   <style>
     /* ---- Dashboard extras ---- */
     .notif-dot { display:inline-block; width:8px; height:8px; background:#EF5350; border-radius:50%; margin-left:4px; vertical-align:middle; }
@@ -83,8 +84,8 @@
   <aside class="sidebar">
     <div class="sidebar-user">
       <div class="sidebar-avatar">👨‍🌾</div>
-      <div class="user-name">Ramesh Patil</div>
-      <div class="user-role">Farmer · Dharwad, Karnataka</div>
+      <div class="user-name" id="userName">Ramesh Patil</div>
+      <div class="user-role" id="userRole">Farmer · Dharwad, Karnataka</div>
     </div>
 
     <div class="sidebar-menu">
@@ -127,7 +128,7 @@
       </div>
       <div class="sidebar-menu-item" style="margin-top:8px;">
         <span class="menu-icon">🚪</span>
-        <a href="auth.html" style="color:inherit;font-size:0.88rem;">Logout</a>
+        <a href="#" onclick="KrishiAuth.handleLogout(); return false;" style="color:inherit;font-size:0.88rem;">Logout</a>
       </div>
     </div>
   </aside>
@@ -362,6 +363,7 @@
 </div>
 
 <script src="js/app.js"></script>
+<script src="js/auth.js"></script>
 <script>
   // Bar chart
   const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];

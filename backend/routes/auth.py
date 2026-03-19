@@ -38,8 +38,13 @@ def register():
 
         return jsonify({
             'message': 'User registered successfully',
-            'user_id': user_id,
-            'access_token': access_token
+            'access_token': access_token,
+            'user': {
+                'id': user_id,
+                'name': data['name'],
+                'email': data['email'],
+                'role': data.get('role', 'farmer')
+            }
         }), 201
 
     except Exception as e:

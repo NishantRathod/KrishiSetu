@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login / Register – KrishiSetu</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/notifications.css" />
   <style>
     .pw-toggle { position:relative; }
     .pw-toggle input { padding-right:42px; }
@@ -62,7 +63,7 @@
       <form data-validate id="loginForm">
         <div class="form-group">
           <label class="form-label">Email / Mobile Number</label>
-          <input class="form-input" type="text" placeholder="email@example.com or +91 XXXXX" required />
+          <input class="form-input" type="text" name="email" placeholder="email@example.com or +91 XXXXX" required />
         </div>
 
         <div class="form-group">
@@ -71,7 +72,7 @@
             <a href="#" style="font-size:0.8rem;color:var(--green-primary);font-weight:600;">Forgot password?</a>
           </label>
           <div class="pw-toggle">
-            <input class="form-input" type="password" id="loginPw" placeholder="Enter your password" required />
+            <input class="form-input" type="password" name="password" id="loginPw" placeholder="Enter your password" required />
             <span class="pw-eye" onclick="togglePw('loginPw',this)">👁</span>
           </div>
         </div>
@@ -105,58 +106,58 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">First Name</label>
-            <input class="form-input" type="text" placeholder="Nishant" required />
+            <input class="form-input" type="text" name="firstName" placeholder="Nishant" required />
           </div>
           <div class="form-group">
             <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" placeholder="Rathod" required />
+            <input class="form-input" type="text" name="lastName" placeholder="Rathod" required />
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" placeholder="email@example.com" required />
+          <input class="form-input" type="email" name="email" placeholder="email@example.com" required />
         </div>
 
         <div class="form-group">
           <label class="form-label">Mobile Number</label>
-          <input class="form-input" type="tel" placeholder="+91 XXXXX XXXXX" required />
+          <input class="form-input" type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required />
         </div>
 
         <div class="form-group">
           <label class="form-label">Register As</label>
-          <select class="form-select" required>
+          <select class="form-select" name="role" required>
             <option value="" disabled selected>Select your role</option>
-            <option>👨‍🌾 Farmer</option>
-            <option>🏘️ FPO (Farmer Producer Org.)</option>
-            <option>👩‍👧‍👦 SHG (Self-Help Group)</option>
-            <option>🏭 Processor / Manufacturer</option>
-            <option>🛍️ Consumer / Buyer</option>
-            <option>🚀 Startup / Entrepreneur</option>
+            <option value="farmer">👨‍🌾 Farmer</option>
+            <option value="fpo">🏘️ FPO (Farmer Producer Org.)</option>
+            <option value="shg">👩‍👧‍👦 SHG (Self-Help Group)</option>
+            <option value="processor">🏭 Processor / Manufacturer</option>
+            <option value="consumer">🛍️ Consumer / Buyer</option>
+            <option value="startup">🚀 Startup / Entrepreneur</option>
           </select>
         </div>
 
         <div class="form-group">
           <label class="form-label">State</label>
-          <select class="form-select">
+          <select class="form-select" name="state">
             <option value="" disabled selected>Select state</option>
-            <option>Maharashtra</option>
-            <option>Karnataka</option>
-            <option>Rajasthan</option>
-            <option>Telangana</option>
-            <option>Tamil Nadu</option>
-            <option>Madhya Pradesh</option>
-            <option>Andhra Pradesh</option>
-            <option>Odisha</option>
-            <option>Gujarat</option>
-            <option>Uttar Pradesh</option>
+            <option value="maharashtra">Maharashtra</option>
+            <option value="karnataka">Karnataka</option>
+            <option value="rajasthan">Rajasthan</option>
+            <option value="telangana">Telangana</option>
+            <option value="tamil_nadu">Tamil Nadu</option>
+            <option value="madhya_pradesh">Madhya Pradesh</option>
+            <option value="andhra_pradesh">Andhra Pradesh</option>
+            <option value="odisha">Odisha</option>
+            <option value="gujarat">Gujarat</option>
+            <option value="uttar_pradesh">Uttar Pradesh</option>
           </select>
         </div>
 
         <div class="form-group">
           <label class="form-label">Create Password</label>
           <div class="pw-toggle">
-            <input class="form-input" type="password" id="regPw" placeholder="Min. 8 characters" required oninput="checkStrength(this.value)" />
+            <input class="form-input" type="password" name="password" id="regPw" placeholder="Min. 8 characters" required oninput="checkStrength(this.value)" />
             <span class="pw-eye" onclick="togglePw('regPw',this)">👁</span>
           </div>
           <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
@@ -179,6 +180,7 @@
   </div>
 
   <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     function switchTab(panelId) {
       document.querySelectorAll('.auth-form-panel').forEach(p => p.style.display = 'none');
