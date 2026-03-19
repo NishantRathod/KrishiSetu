@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace – KrishiSetu</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .tag-pills { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+    .tag-pill {
+      padding:5px 14px; border-radius:50px; font-size:0.8rem; font-weight:600;
+      cursor:pointer; border:1.5px solid rgba(46,125,50,0.2); color:var(--text-muted);
+      background:var(--white); transition:all 0.25s;
+    }
+    .tag-pill.active, .tag-pill:hover { background:var(--green-primary); color:var(--white); border-color:var(--green-primary); }
+    .product-card-mp { cursor:pointer; }
+    .product-card-mp:hover .product-name { color:var(--green-primary); }
+    .rating { color:#FFC107; font-size:0.78rem; margin-bottom:12px; }
+    .mp-breadcrumb { font-size:0.82rem; color:rgba(255,255,255,0.65); margin-top:8px; }
+    .mp-breadcrumb a { color:rgba(255,255,255,0.65); transition:color 0.2s; }
+    .mp-breadcrumb a:hover { color:var(--gold); }
+    .product-detail-qty { display:flex; align-items:center; gap:8px; margin-top:10px; font-size:0.8rem; color:var(--text-muted); }
+    .seller-badge { display:inline-flex; align-items:center; gap:4px; background:var(--green-bg); color:var(--green-primary); font-size:0.72rem; font-weight:600; padding:3px 9px; border-radius:50px; margin-bottom:8px; }
+    .mp-empty { text-align:center; padding:60px; color:var(--text-muted); }
+    .mp-empty .empty-icon { font-size:4rem; margin-bottom:16px; }
+    .btn-clear-filter { font-size:0.82rem; color:var(--green-primary); background:none; cursor:pointer; padding:6px 12px; border:1px solid var(--green-primary); border-radius:var(--radius-sm); margin-top:8px; }
+    .btn-clear-filter:hover { background:var(--green-bg); }
+    .price-range-display { font-size:0.85rem; color:var(--green-primary); font-weight:600; margin-bottom:8px; }
+    .apply-filter {
+      width:100%; padding:10px; background:var(--green-primary); color:var(--white);
+      border-radius:var(--radius-sm); font-size:0.88rem; font-weight:600;
+      margin-top:16px; transition:all 0.2s;
+    }
+    .apply-filter:hover { background:var(--green-dark); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🌾</div>
+      <span class="logo-text">Krishi<span>Setu</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="marketplace.html" class="active">Marketplace</a></li>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#stakeholders">Stakeholders</a></li>
+      <li><a href="index.html#how-it-works">How It Works</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn-login">Login</a>
+      <a href="auth.html" class="btn-register">Join Free</a>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="container">
+    <h1>🛒 Millet Marketplace</h1>
+    <p>Discover fresh, certified millet produce directly from farmers, FPOs &amp; SHGs across India</p>
+    <div class="mp-breadcrumb" style="margin-top:12px;">
+      <a href="index.html">Home</a> &nbsp;/&nbsp; Marketplace
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY PILLS -->
+<div style="background:var(--white); border-bottom:1px solid rgba(46,125,50,0.1); padding:18px 0;">
+  <div class="container">
+    <div class="tag-pills" id="categoryPills">
+      <span class="tag-pill active" data-cat="all">🌾 All Millets</span>
+      <span class="tag-pill" data-cat="ragi">🌿 Ragi (Finger Millet)</span>
+      <span class="tag-pill" data-cat="bajra">🌽 Bajra (Pearl Millet)</span>
+      <span class="tag-pill" data-cat="jowar">🍃 Jowar (Sorghum)</span>
+      <span class="tag-pill" data-cat="foxtail">🌱 Foxtail Millet</span>
+      <span class="tag-pill" data-cat="kodo">🍀 Kodo Millet</span>
+      <span class="tag-pill" data-cat="little">🌾 Little Millet</span>
+      <span class="tag-pill" data-cat="processed">📦 Processed / Value-Added</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container">
+  <div class="marketplace-layout">
+
+    <!-- FILTER SIDEBAR -->
+    <aside class="filter-sidebar">
+      <div class="filter-title">🔧 Filters</div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Millet Type</div>
+        <label class="filter-option"><input type="checkbox" checked> Ragi / Finger Millet <span class="count">48</span></label>
+        <label class="filter-option"><input type="checkbox" checked> Bajra / Pearl Millet <span class="count">62</span></label>
+        <label class="filter-option"><input type="checkbox"> Jowar / Sorghum <span class="count">35</span></label>
+        <label class="filter-option"><input type="checkbox"> Foxtail Millet <span class="count">28</span></label>
+        <label class="filter-option"><input type="checkbox"> Kodo Millet <span class="count">19</span></label>
+        <label class="filter-option"><input type="checkbox"> Little Millet <span class="count">14</span></label>
+        <label class="filter-option"><input type="checkbox"> Proso Millet <span class="count">9</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Seller Type</div>
+        <label class="filter-option"><input type="checkbox" checked> Farmer <span class="count">180</span></label>
+        <label class="filter-option"><input type="checkbox" checked> FPO <span class="count">54</span></label>
+        <label class="filter-option"><input type="checkbox"> SHG <span class="count">38</span></label>
+        <label class="filter-option"><input type="checkbox"> Processor <span class="count">27</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Certification</div>
+        <label class="filter-option"><input type="checkbox"> Organic Certified</label>
+        <label class="filter-option"><input type="checkbox"> FSSAI Approved</label>
+        <label class="filter-option"><input type="checkbox"> Government Verified</label>
+        <label class="filter-option"><input type="checkbox"> Non-GMO</label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Price Range (₹ per kg)</div>
+        <div class="price-range-display" id="priceDisplay">₹0 - ₹200</div>
+        <input type="range" min="0" max="500" value="200" class="range-slider" id="priceRange">
+        <div class="range-values"><span>₹0</span><span>₹500</span></div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">State / Region</div>
+        <label class="filter-option"><input type="checkbox" checked> Maharashtra</label>
+        <label class="filter-option"><input type="checkbox"> Karnataka</label>
+        <label class="filter-option"><input type="checkbox"> Rajasthan</label>
+        <label class="filter-option"><input type="checkbox"> Telangana</label>
+        <label class="filter-option"><input type="checkbox"> Tamil Nadu</label>
+        <label class="filter-option"><input type="checkbox"> Odisha</label>
+      </div>
+
+      <button class="apply-filter">Apply Filters</button>
+      <button class="btn-clear-filter">Clear All</button>
+    </aside>
+
+    <!-- PRODUCTS MAIN -->
+    <div class="mp-main">
+      <div class="mp-toolbar">
+        <div class="mp-search-bar">
+          <span>🔍</span>
+          <input type="text" placeholder="Search millets, farmers, products..." id="searchInput" />
+        </div>
+        <span class="mp-count" id="resultCount">Showing <strong>12</strong> of 215 products</span>
+        <div class="mp-sort">
+          <select id="sortSelect">
+            <option>Sort: Newest</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+            <option>Most Popular</option>
+            <option>Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="products-grid-mp" id="productsGrid">
+
+        <!-- Product 1 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg1">
+            🌿
+            <span class="product-badge-organic">Organic</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">👨‍🌾 Farmer</span>
+            <div class="product-name">Finger Millet (Ragi) Flour — 5kg Pack</div>
+            <div class="rating">★★★★★ <span style="color:var(--gray)">(128 reviews)</span></div>
+            <div class="product-farmer">👤 Ramesh Patil · Karnataka</div>
+            <div class="product-detail-qty">📦 Available: 500 kg &nbsp;|&nbsp; 📍 Dharwad</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹85 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg2">
+            🌽
+            <span class="product-badge-organic">FPO</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">🤝 FPO</span>
+            <div class="product-name">Pearl Millet (Bajra) Whole Grain</div>
+            <div class="rating">★★★★☆ <span style="color:var(--gray)">(89 reviews)</span></div>
+            <div class="product-farmer">🤝 Vidarbha Millet FPO · Maharashtra</div>
+            <div class="product-detail-qty">📦 Available: 2,000 kg &nbsp;|&nbsp; 📍 Amravati</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹55 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg3">
+            🍃
+            <span class="product-badge-organic">SHG</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">👩‍👩‍👧 SHG</span>
+            <div class="product-name">Sorghum (Jowar) Flour — Value Added</div>
+            <div class="rating">★★★★★ <span style="color:var(--gray)">(203 reviews)</span></div>
+            <div class="product-farmer">👩‍👩‍👧 Mahila Shakti SHG · Rajasthan</div>
+            <div class="product-detail-qty">📦 Available: 300 kg &nbsp;|&nbsp; 📍 Jaipur</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹48 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg4">
+            🌱
+            <span class="product-badge-organic">Certified</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">🤝 FPO</span>
+            <div class="product-name">Foxtail Millet (Kangni) Raw Grain</div>
+            <div class="rating">★★★★☆ <span style="color:var(--gray)">(56 reviews)</span></div>
+            <div class="product-farmer">🤝 Deccan Agri FPO · Telangana</div>
+            <div class="product-detail-qty">📦 Available: 800 kg &nbsp;|&nbsp; 📍 Warangal</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹70 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 5 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg5">
+            🍀
+            <span class="product-badge-organic">Organic</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">👨‍🌾 Farmer</span>
+            <div class="product-name">Kodo Millet (Kodon) Polished</div>
+            <div class="rating">★★★★★ <span style="color:var(--gray)">(41 reviews)</span></div>
+            <div class="product-farmer">👤 Suresh Yadav · Madhya Pradesh</div>
+            <div class="product-detail-qty">📦 Available: 200 kg &nbsp;|&nbsp; 📍 Indore</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹90 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg6">
+            🌾
+            <span class="product-badge-organic">FSSAI</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">🏭 Processor</span>
+            <div class="product-name">Ragi Malt Powder (Sprouted)</div>
+            <div class="rating">★★★★★ <span style="color:var(--gray)">(312 reviews)</span></div>
+            <div class="product-farmer">🏭 NutriMillet Foods · Tamil Nadu</div>
+            <div class="product-detail-qty">📦 Available: 150 kg &nbsp;|&nbsp; 📍 Coimbatore</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹180 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 7 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg7">
+            🌾
+            <span class="product-badge-organic">Organic</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">👩‍👩‍👧 SHG</span>
+            <div class="product-name">Barnyard Millet (Samak) Rice</div>
+            <div class="rating">★★★★☆ <span style="color:var(--gray)">(67 reviews)</span></div>
+            <div class="product-farmer">👩‍👩‍👧 Shakti Women SHG · Odisha</div>
+            <div class="product-detail-qty">📦 Available: 400 kg &nbsp;|&nbsp; 📍 Bhubaneswar</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹95 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 8 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg8">
+            📦
+            <span class="product-badge-organic">Value-Add</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">🏭 Processor</span>
+            <div class="product-name">Multi-Millet Cookie Mix — 1kg</div>
+            <div class="rating">★★★★★ <span style="color:var(--gray)">(198 reviews)</span></div>
+            <div class="product-farmer">🏭 Green Harvest Co. · Pune</div>
+            <div class="product-detail-qty">📦 Available: 80 kg &nbsp;|&nbsp; 📍 Pune</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹220 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 9 -->
+        <div class="product-card product-card-mp">
+          <div class="product-img bg1">
+            🌿
+            <span class="product-badge-organic">Certified</span>
+          </div>
+          <div class="product-info">
+            <span class="seller-badge">👨‍🌾 Farmer</span>
+            <div class="product-name">Little Millet (Sama) Grain</div>
+            <div class="rating">★★★★☆ <span style="color:var(--gray)">(33 reviews)</span></div>
+            <div class="product-farmer">👤 Anand Kumar · Andhra Pradesh</div>
+            <div class="product-detail-qty">📦 Available: 600 kg &nbsp;|&nbsp; 📍 Kurnool</div>
+            <div class="product-footer" style="margin-top:12px;">
+              <div class="product-price">₹65 <span>/kg</span></div>
+              <button class="btn-add">+</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="load-more">
+        <button class="btn-load-more" id="loadMoreBtn">Load More Products (203 remaining)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-icon">🌾</div>
+          <span class="logo-text" style="color:white;">Krishi<span>Setu</span></span>
+        </div>
+        <p>Bridging the Millet Ecosystem with Technology — fair, transparent, and traceable.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="#">𝕏</a>
+          <a class="social-btn" href="#">in</a>
+          <a class="social-btn" href="#">f</a>
+          <a class="social-btn" href="#">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="marketplace.html">Marketplace</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="index.html#features">Features</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Stakeholders</h5>
+        <ul>
+          <li><a href="#">Farmers</a></li>
+          <li><a href="#">FPOs</a></li>
+          <li><a href="#">SHGs</a></li>
+          <li><a href="#">Consumers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Help</h5>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KrishiSetu. Sharad Institute of Technology, Yadrav-Ichalkaranji.</p>
+      <p class="credits">🌾 Shree Anna — India's Superfood</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  // Category pills filter
+  document.querySelectorAll('.tag-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+  // Load more
+  document.getElementById('loadMoreBtn')?.addEventListener('click', function() {
+    this.textContent = '✓ All products loaded';
+    this.disabled = true;
+    this.style.opacity = '0.5';
+  });
+  // Search filter (visual demo)
+  document.getElementById('searchInput')?.addEventListener('input', function() {
+    const val = this.value.toLowerCase();
+    document.querySelectorAll('.product-card-mp').forEach(card => {
+      const name = card.querySelector('.product-name')?.textContent.toLowerCase() || '';
+      const farmer = card.querySelector('.product-farmer')?.textContent.toLowerCase() || '';
+      card.style.display = (!val || name.includes(val) || farmer.includes(val)) ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

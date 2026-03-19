@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – KrishiSetu</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* ---- Dashboard extras ---- */
+    .notif-dot { display:inline-block; width:8px; height:8px; background:#EF5350; border-radius:50%; margin-left:4px; vertical-align:middle; }
+    .price-ticker { display:flex; gap:16px; flex-wrap:wrap; background:var(--green-bg); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; border:1px solid var(--border,#D8EED9); font-size:0.87rem; }
+    .ticker-item { display:flex; align-items:center; gap:7px; }
+    .ticker-item .crop { font-weight:700; color:var(--green-dark); }
+    .ticker-item .price { color:var(--green-primary); font-weight:800; }
+    .ticker-item .change { font-size:0.73rem; }
+    .ticker-item .up { color:#2E7D32; } .ticker-item .dn { color:#E53935; }
+    .dash-full { grid-column:1/-1; }
+    .quick-actions { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+    .quick-btn {
+      display:flex; align-items:center; gap:9px; padding:11px 20px;
+      border-radius:var(--radius-sm,8px); font-size:0.87rem; font-weight:700;
+      cursor:pointer; transition:all 0.25s; border:1.5px solid rgba(46,125,50,0.2);
+      background:var(--white,#fff); color:var(--green-dark,#1B5E20);
+    }
+    .quick-btn:hover { background:var(--green-primary,#2E7D32); color:#fff; border-color:var(--green-primary,#2E7D32); transform:translateY(-2px); box-shadow:0 4px 16px rgba(46,125,50,0.2); }
+    .quick-btn .qb-icon { font-size:1.1rem; }
+    .notification-list { display:flex; flex-direction:column; gap:10px; }
+    .notif-item { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-light,#F5F5F5); }
+    .notif-item:last-child { border:none; }
+    .notif-icon { font-size:1.2rem; width:34px; height:34px; border-radius:10px; background:var(--green-bg,#F1F8E9); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .notif-text { font-size:0.83rem; color:var(--text-muted,#616161); line-height:1.5; }
+    .notif-text strong { color:var(--text,#1A1A1A); display:block; margin-bottom:1px; font-size:0.86rem; }
+    .notif-time { font-size:0.72rem; color:var(--gray,#9E9E9E); margin-top:2px; }
+    .listing-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-light,#F5F5F5); }
+    .listing-row:last-child { border:none; }
+    .listing-icon { font-size:1.5rem; width:40px; height:40px; border-radius:10px; background:var(--green-bg,#F1F8E9); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .listing-info .l-name { font-size:0.87rem; font-weight:700; color:var(--text,#1A1A1A); }
+    .listing-info .l-detail { font-size:0.76rem; color:var(--gray,#9E9E9E); }
+    .listing-price { margin-left:auto; font-weight:800; font-size:0.9rem; color:var(--green-primary,#2E7D32); }
+    .listing-status { font-size:0.72rem; padding:3px 9px; border-radius:50px; font-weight:600; }
+    .ls-active { background:#E8F5E9; color:#2E7D32; }
+    .ls-sold { background:#EDE7F6; color:#6A1B9A; }
+    .ls-pending { background:#FFF8E1; color:#F57C00; }
+    .map-placeholder { background:linear-gradient(135deg,#E8F5E9,#C8E6C9); border-radius:var(--radius-sm,8px); height:170px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; color:var(--green-dark,#1B5E20); font-size:0.9rem; font-weight:600; margin-top:12px; }
+    .map-placeholder .map-icon { font-size:2.5rem; }
+    .stat-card-green { background:linear-gradient(135deg,var(--green-primary,#2E7D32),var(--green-mid,#388E3C)); }
+    .stat-card-green .ds-label,.stat-card-green .ds-value,.stat-card-green .ds-change { color:white; }
+    .stat-card-green .ds-icon { background:rgba(255,255,255,0.2); }
+    .stat-card-gold { background:linear-gradient(135deg,#F9A825,#FFB300); }
+    .stat-card-gold .ds-label,.stat-card-gold .ds-value,.stat-card-gold .ds-change { color:#1B5E20; }
+    .stat-card-gold .ds-icon { background:rgba(255,255,255,0.35); }
+    .top-nav-right { display:flex; align-items:center; gap:14px; }
+    .topbar-search { display:flex; align-items:center; gap:9px; background:var(--green-bg,#F1F8E9); border:1px solid rgba(46,125,50,0.15); border-radius:8px; padding:8px 14px; font-size:0.87rem; color:var(--gray,#9E9E9E); max-width:220px; }
+    .topbar-search input { background:none; border:none; outline:none; font-size:0.87rem; width:100%; color:var(--text,#1A1A1A); }
+    .topbar-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--green-primary,#2E7D32),#81C784); display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; }
+    @media(max-width:768px){ .dashboard-layout{display:block;} .sidebar{min-height:auto;} .dash-stats{grid-template-columns:1fr 1fr;} .dash-grid-2{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar" style="border-bottom:1px solid rgba(46,125,50,0.1);">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🌾</div>
+      <span class="logo-text">Krishi<span>Setu</span></span>
+    </a>
+    <div class="top-nav-right">
+      <div class="topbar-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <span style="font-size:1.2rem;cursor:pointer;position:relative;">🔔<span class="notif-dot"></span></span>
+      <div class="topbar-avatar">👨‍🌾</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== DASHBOARD LAYOUT ===== -->
+<div class="dashboard-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">👨‍🌾</div>
+      <div class="user-name">Ramesh Patil</div>
+      <div class="user-role">Farmer · Dharwad, Karnataka</div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="sidebar-section-label">Main Menu</div>
+      <div class="sidebar-menu-item active">
+        <span class="menu-icon">🏠</span> Dashboard
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">🛒</span> My Listings
+        <span style="margin-left:auto;background:rgba(249,168,37,0.25);color:#F9A825;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">5</span>
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">📦</span> Orders
+        <span style="margin-left:auto;background:rgba(76,175,80,0.25);color:#81C784;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">3</span>
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">💰</span> Earnings
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">📊</span> Price Tracker
+      </div>
+
+      <div class="sidebar-section-label" style="margin-top:12px;">Tools</div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">🔍</span> Traceability
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">🌾</span> Marketplace
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">📋</span> Gov. Schemes
+      </div>
+
+      <div class="sidebar-section-label" style="margin-top:12px;">Account</div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">👤</span> My Profile
+      </div>
+      <div class="sidebar-menu-item">
+        <span class="menu-icon">⚙️</span> Settings
+      </div>
+      <div class="sidebar-menu-item" style="margin-top:8px;">
+        <span class="menu-icon">🚪</span>
+        <a href="auth.html" style="color:inherit;font-size:0.88rem;">Logout</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="dashboard-main">
+
+    <div class="dash-header">
+      <div>
+        <h1>Good Morning, Ramesh 👋</h1>
+        <p>Here's what's happening in your millet farm today — 14 March 2026</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="marketplace.html" style="padding:10px 20px;background:var(--green-primary);color:white;border-radius:8px;font-size:0.87rem;font-weight:700;">+ Add Listing</a>
+        <a href="marketplace.html" style="padding:10px 20px;background:var(--green-bg);border:1.5px solid rgba(46,125,50,0.2);border-radius:8px;font-size:0.87rem;font-weight:600;color:var(--green-dark);">View Marketplace</a>
+      </div>
+    </div>
+
+    <!-- LIVE PRICE TICKER -->
+    <div class="price-ticker">
+      <strong style="color:var(--green-dark);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;align-self:center;">Live Prices ·</strong>
+      <div class="ticker-item"><span class="crop">Ragi</span> <span class="price">₹85/kg</span> <span class="change up">↑2.4%</span></div>
+      <div class="ticker-item"><span class="crop">Bajra</span> <span class="price">₹55/kg</span> <span class="change dn">↓0.8%</span></div>
+      <div class="ticker-item"><span class="crop">Jowar</span> <span class="price">₹45/kg</span> <span class="change up">↑1.2%</span></div>
+      <div class="ticker-item"><span class="crop">Foxtail</span> <span class="price">₹70/kg</span> <span class="change up">↑3.1%</span></div>
+      <div class="ticker-item"><span class="crop">Kodo</span> <span class="price">₹90/kg</span> <span class="change up">↑0.5%</span></div>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="dash-stats">
+      <div class="dash-stat-card stat-card-green">
+        <div class="ds-icon g">💰</div>
+        <div class="ds-label">This Month's Revenue</div>
+        <div class="ds-value">₹18,450</div>
+        <div class="ds-change">↑ 12.4% vs last month</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="ds-icon go">📦</div>
+        <div class="ds-label">Active Listings</div>
+        <div class="ds-value">5</div>
+        <div class="ds-change" style="color:#F9A825;">3 getting views now</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="ds-icon b">🛒</div>
+        <div class="ds-label">Pending Orders</div>
+        <div class="ds-value">3</div>
+        <div class="ds-change" style="color:#1565C0;">1 awaiting dispatch</div>
+      </div>
+      <div class="dash-stat-card stat-card-gold">
+        <div class="ds-icon go">⭐</div>
+        <div class="ds-label">Seller Rating</div>
+        <div class="ds-value">4.8 / 5</div>
+        <div class="ds-change">Based on 128 reviews</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions">
+      <button class="quick-btn"><span class="qb-icon">📋</span> Add New Listing</button>
+      <button class="quick-btn"><span class="qb-icon">📦</span> Manage Orders</button>
+      <button class="quick-btn"><span class="qb-icon">💳</span> Withdraw Earnings</button>
+      <button class="quick-btn"><span class="qb-icon">🔍</span> Track Delivery</button>
+      <button class="quick-btn"><span class="qb-icon">📊</span> Market Prices</button>
+    </div>
+
+    <!-- TWO COLUMN GRID -->
+    <div class="dash-grid-2">
+
+      <!-- RECENT ORDERS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          Recent Orders
+          <a href="#">View All</a>
+        </div>
+        <div class="order-item">
+          <span class="order-icon">🌿</span>
+          <div class="order-info">
+            <div class="o-name">Ragi Grain — 50 kg</div>
+            <div class="o-date">Mar 13, 2026 · Meghna Foods, Pune</div>
+          </div>
+          <div class="order-amount">₹4,250</div>
+          <span class="order-status status-delivered">Delivered</span>
+        </div>
+        <div class="order-item">
+          <span class="order-icon">🌽</span>
+          <div class="order-info">
+            <div class="o-name">Bajra Whole — 100 kg</div>
+            <div class="o-date">Mar 11, 2026 · Rajesh Stores, Mumbai</div>
+          </div>
+          <div class="order-amount">₹5,500</div>
+          <span class="order-status status-processing">In Transit</span>
+        </div>
+        <div class="order-item">
+          <span class="order-icon">🍃</span>
+          <div class="order-info">
+            <div class="o-name">Jowar Grain — 80 kg</div>
+            <div class="o-date">Mar 10, 2026 · NutriHarvest, Bengaluru</div>
+          </div>
+          <div class="order-amount">₹3,600</div>
+          <span class="order-status status-pending">Pending</span>
+        </div>
+        <div class="order-item">
+          <span class="order-icon">🌱</span>
+          <div class="order-info">
+            <div class="o-name">Foxtail Millet — 30 kg</div>
+            <div class="o-date">Mar 9, 2026 · Green Cart, Hyderabad</div>
+          </div>
+          <div class="order-amount">₹2,100</div>
+          <span class="order-status status-delivered">Delivered</span>
+        </div>
+      </div>
+
+      <!-- MONTHLY SALES CHART -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          Monthly Sales (₹)
+          <span style="font-size:0.78rem;color:var(--gray);">2025–26</span>
+        </div>
+        <div class="bar-chart" id="salesChart"></div>
+        <div class="bar-labels" id="chartLabels"></div>
+        <div style="margin-top:16px;display:flex;gap:20px;font-size:0.8rem;color:var(--text-muted);">
+          <span>🟩 Millets sold</span>
+          <span style="margin-left:auto;">Total: <strong style="color:var(--green-dark)">₹1,84,500</strong></span>
+        </div>
+      </div>
+
+      <!-- MY LISTINGS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          My Active Listings
+          <a href="#">Manage</a>
+        </div>
+        <div class="listing-row">
+          <div class="listing-icon">🌿</div>
+          <div class="listing-info">
+            <div class="l-name">Finger Millet (Ragi) Grain</div>
+            <div class="l-detail">250 kg available · ₹85/kg</div>
+          </div>
+          <span class="listing-status ls-active">Active</span>
+          <div class="listing-price">₹85<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
+        </div>
+        <div class="listing-row">
+          <div class="listing-icon">🌽</div>
+          <div class="listing-info">
+            <div class="l-name">Pearl Millet (Bajra) Whole</div>
+            <div class="l-detail">400 kg available · ₹55/kg</div>
+          </div>
+          <span class="listing-status ls-active">Active</span>
+          <div class="listing-price">₹55<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
+        </div>
+        <div class="listing-row">
+          <div class="listing-icon">🍃</div>
+          <div class="listing-info">
+            <div class="l-name">Sorghum (Jowar) Grain</div>
+            <div class="l-detail">120 kg available · ₹45/kg</div>
+          </div>
+          <span class="listing-status ls-pending">Low Stock</span>
+          <div class="listing-price">₹45<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
+        </div>
+        <div class="listing-row">
+          <div class="listing-icon">🌱</div>
+          <div class="listing-info">
+            <div class="l-name">Foxtail Millet (Kangni)</div>
+            <div class="l-detail">Sold out — 500 kg</div>
+          </div>
+          <span class="listing-status ls-sold">Sold Out</span>
+          <div class="listing-price">₹70<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          Notifications
+          <a href="#">Mark all read</a>
+        </div>
+        <div class="notification-list">
+          <div class="notif-item">
+            <div class="notif-icon">🛒</div>
+            <div>
+              <div class="notif-text"><strong>New Order Received</strong>Meghna Foods placed an order for 50 kg Ragi Grain.</div>
+              <div class="notif-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon">💰</div>
+            <div>
+              <div class="notif-text"><strong>Payment Received</strong>₹4,250 credited for Order #KS-2024 (Ragi Grain).</div>
+              <div class="notif-time">Yesterday, 3:40 PM</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon">📊</div>
+            <div>
+              <div class="notif-text"><strong>Price Alert</strong>Foxtail millet price rose 3.1% today — ₹70/kg in your region.</div>
+              <div class="notif-time">Mar 13, 9:00 AM</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon">⭐</div>
+            <div>
+              <div class="notif-text"><strong>New Review</strong>Rajesh Stores rated your Bajra Whole — ★★★★★ "Excellent quality!"</div>
+              <div class="notif-time">Mar 12, 6:15 PM</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon">🏛️</div>
+            <div>
+              <div class="notif-text"><strong>Gov. Scheme Update</strong>PM-AASHA price support scheme enrollment is open till March 31.</div>
+              <div class="notif-time">Mar 11, 10:00 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FARM LOCATION MAP (placeholder) -->
+      <div class="dash-card dash-full">
+        <div class="dash-card-title">
+          Farm Location &amp; Delivery Reach
+          <span style="font-size:0.78rem;color:var(--gray)">Dharwad, Karnataka</span>
+        </div>
+        <div class="map-placeholder">
+          <div class="map-icon">🗺️</div>
+          <div>Interactive map will load here</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);font-weight:400">Your farm · Dharwad, Karnataka · Delivery radius: 200 km</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+  // Bar chart
+  const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const values = [8200, 12400, 9800, 15600, 18200, 21000, 16400, 18450];
+  const max = Math.max(...values);
+  const chart = document.getElementById('salesChart');
+  const labels = document.getElementById('chartLabels');
+  months.forEach((m, i) => {
+    const col = document.createElement('div');
+    col.style.cssText = `flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;`;
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = Math.round((values[i] / max) * 96) + 'px';
+    bar.title = '₹' + values[i].toLocaleString('en-IN');
+    col.appendChild(bar);
+    chart.appendChild(col);
+    const lbl = document.createElement('span');
+    lbl.textContent = m;
+    lbl.style.cssText = 'flex:1;text-align:center;font-size:0.68rem;color:var(--gray);';
+    labels.appendChild(lbl);
+  });
+
+  // Sidebar clicks
+  document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar-menu-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Quick buttons feedback
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const orig = this.innerHTML;
+      this.innerHTML = '✓ Done!';
+      this.style.background = 'var(--green-primary)';
+      this.style.color = 'white';
+      setTimeout(() => { this.innerHTML = orig; this.style.background = ''; this.style.color = ''; }, 1400);
+    });
+  });
+</script>
+</body>
+</html>

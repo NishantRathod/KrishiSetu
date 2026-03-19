@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KrishiSetu – Bridging Millet Ecosystem with Tech</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🌾</div>
+      <span class="logo-text">Krishi<span>Setu</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#stakeholders">Stakeholders</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn-login">Login</a>
+      <a href="auth.html" class="btn-register">Join Free</a>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-particles"></div>
+  <div class="hero-container">
+    <!-- Left Content -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        🌱 India's Millet Digital Marketplace
+      </div>
+      <h1 class="hero-title">
+        Bridging the <span class="highlight">Millet Ecosystem</span> with Technology
+      </h1>
+      <p class="hero-subtitle">
+        KrishiSetu connects farmers, FPOs, SHGs, processors, and consumers on a single unified platform — enabling fair pricing, transparent trading, and complete traceability from <strong style="color:rgba(255,255,255,0.9)">farm to fork</strong>.
+      </p>
+      <div class="hero-actions">
+        <a href="marketplace.html" class="btn-hero-primary">Explore Marketplace</a>
+        <a href="auth.html" class="btn-hero-secondary">Get Started Free →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">5K+</div>
+          <div class="label">Farmers Connected</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">300+</div>
+          <div class="label">Millet Products</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">18</div>
+          <div class="label">States Covered</div>
+        </div>
+      </div>
+    </div>
+    <!-- Right Visual -->
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <!-- Main floating card -->
+        <div class="hero-main-card">
+          <div class="hero-card-header">
+            <div class="hero-card-icon">🛒</div>
+            <div>
+              <div class="hero-card-title">Millet Marketplace</div>
+              <div class="hero-card-sub">Fresh • Direct • Traceable</div>
+            </div>
+          </div>
+          <div class="hero-product-list">
+            <div class="hero-product-item">
+              <span class="name">Ragi Flour</span>
+              <span class="tag">Organic</span>
+              <span class="price">₹85/kg</span>
+            </div>
+            <div class="hero-product-item">
+              <span class="name">Bajra Seeds</span>
+              <span class="tag">Certified</span>
+              <span class="price">₹55/kg</span>
+            </div>
+            <div class="hero-product-item">
+              <span class="name">Jowar Grains</span>
+              <span class="tag">SHG</span>
+              <span class="price">₹45/kg</span>
+            </div>
+            <div class="hero-product-item">
+              <span class="name">Foxtail Millet</span>
+              <span class="tag">FPO</span>
+              <span class="price">₹70/kg</span>
+            </div>
+          </div>
+        </div>
+        <!-- Mini card 2 -->
+        <div class="mini-card card-2">
+          <div class="mc-label">Today's Market Price</div>
+          <div class="mc-value">Bajra ↑ ₹55</div>
+        </div>
+        <!-- Mini card 3 -->
+        <div class="mini-card card-3">
+          <div class="mc-label">Active Sellers</div>
+          <div class="mc-value">1,248 🌾</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS BAND ===================== -->
+<div class="stats-band">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num"><span data-target="5000" data-suffix="+">0+</span></div>
+        <div class="stat-label">Registered Farmers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span data-target="300" data-suffix="+">0+</span></div>
+        <div class="stat-label">Millet Products Listed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span data-target="120" data-suffix="+">0+</span></div>
+        <div class="stat-label">Verified FPOs & SHGs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span data-target="18" data-suffix="">0</span></div>
+        <div class="stat-label">States Onboarded</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <!-- Visual -->
+      <div class="about-visual">
+        <div class="about-main-box">
+          <h4 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--green-primary);margin-bottom:16px;">The KrishiSetu Ecosystem</h4>
+          <div class="ecosystem-wheel">
+            <div class="eco-node">
+              <div class="eco-icon">👨‍🌾</div>
+              <div class="eco-label">Farmers</div>
+            </div>
+            <div class="eco-node">
+              <div class="eco-icon">🤝</div>
+              <div class="eco-label">FPOs</div>
+            </div>
+            <div class="eco-node">
+              <div class="eco-icon">👩‍👩‍👧</div>
+              <div class="eco-label">SHGs</div>
+            </div>
+            <div class="eco-node">
+              <div class="eco-icon">🏭</div>
+              <div class="eco-label">Processors</div>
+            </div>
+            <div class="eco-center">
+              <div class="eco-icon">🌾</div>
+              <div class="eco-label">KrishiSetu Platform</div>
+            </div>
+            <div class="eco-node" style="grid-column: 1; ">
+              <div class="eco-icon">🛍️</div>
+              <div class="eco-label">Consumers</div>
+            </div>
+            <div class="eco-node">
+              <div class="eco-icon">🚀</div>
+              <div class="eco-label">Startups</div>
+            </div>
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;margin-top:4px;">All stakeholders on one unified platform</p>
+        </div>
+        <div class="about-decoration-box"></div>
+      </div>
+      <!-- Content -->
+      <div>
+        <div class="section-tag">🌾 About KrishiSetu</div>
+        <h2 class="section-title">India's Smartest Millet Value Chain Platform</h2>
+        <p class="section-desc" style="margin-bottom:28px;">
+          Millets (Shree Anna) are nutritionally rich, climate-resilient crops vital to sustainable agriculture. KrishiSetu digitalizes the entire millet ecosystem — removing middlemen, ensuring fair prices, and empowering smallholder farmers.
+        </p>
+        <div class="about-points">
+          <div class="about-point">
+            <div class="point-icon">🏪</div>
+            <div class="point-text">
+              <strong>Unified Digital Marketplace</strong>
+              Connects farmers, FPOs, SHGs, processors, and consumers on one transparent platform.
+            </div>
+          </div>
+          <div class="about-point">
+            <div class="point-icon">💰</div>
+            <div class="point-text">
+              <strong>Fair Pricing Engine</strong>
+              Real-time market data and pricing ensures farmers receive the true value of their produce.
+            </div>
+          </div>
+          <div class="about-point">
+            <div class="point-icon">🔍</div>
+            <div class="point-text">
+              <strong>Farm-to-Fork Traceability</strong>
+              Consumers can trace the complete supply chain — from cultivation to product delivery.
+            </div>
+          </div>
+          <div class="about-point">
+            <div class="point-icon">📶</div>
+            <div class="point-text">
+              <strong>Accessible Anywhere</strong>
+              Designed for low-bandwidth rural connectivity with multilingual mobile support.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:0">
+      <div class="section-tag">⚡ Platform Features</div>
+      <h2 class="section-title">Everything the Millet Ecosystem Needs</h2>
+      <p class="section-desc">Six powerful capabilities to transform the way millets are grown, traded, and consumed across India.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">🏪</div>
+        <h3>Direct Marketplace</h3>
+        <p>Farmers and SHGs list their millet produce directly. Buyers browse, compare, and order — zero middlemen, maximum margin for farmers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon gold">📊</div>
+        <h3>Real-Time Pricing Engine</h3>
+        <p>Live market price updates help farmers make informed selling decisions and ensure buyers get competitive, transparent rates at all times.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🔗</div>
+        <h3>Farm-to-Fork Traceability</h3>
+        <p>Every product is digitally tagged with origin, farmer details, certifications, and supply chain data — complete consumer transparency.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon brown">🌍</div>
+        <h3>Multilingual & Offline Access</h3>
+        <p>Available in multiple Indian languages. Works seamlessly in low-connectivity rural areas through progressive web app technology.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon gold">💳</div>
+        <h3>Integrated Payment Gateway</h3>
+        <p>Secure digital payments directly to farmer bank accounts. Supports UPI, net banking, and multiple payment modes for seamless transactions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🏆</div>
+        <h3>Quality Certification Hub</h3>
+        <p>SHGs, FPOs, and farmers can showcase certifications. Verified quality badges build consumer trust and command premium pricing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAKEHOLDERS ===================== -->
+<section class="stakeholders" id="stakeholders">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-tag">👥 Who It Serves</div>
+      <h2 class="section-title">Built for Every Stakeholder</h2>
+      <p class="section-desc">KrishiSetu is designed to serve the entire millet value chain ecosystem.</p>
+    </div>
+    <div class="stakeholders-grid">
+      <div class="stakeholder-card">
+        <span class="stakeholder-icon">👨‍🌾</span>
+        <h4>Farmers</h4>
+        <p>List millet produce, access real-time prices, and sell directly to buyers for better margins.</p>
+      </div>
+      <div class="stakeholder-card">
+        <span class="stakeholder-icon">🤝</span>
+        <h4>FPOs</h4>
+        <p>Farmer Producer Organizations manage bulk listings, connect with processors, and access institutional buyers.</p>
+      </div>
+      <div class="stakeholder-card">
+        <span class="stakeholder-icon">👩‍👩‍👧</span>
+        <h4>SHGs</h4>
+        <p>Self-Help Groups showcase value-added millet products and reach broader consumer markets.</p>
+      </div>
+      <div class="stakeholder-card">
+        <span class="stakeholder-icon">🏭</span>
+        <h4>Processors</h4>
+        <p>Reliable sourcing of quality millet supplies directly from verified farmers and FPOs.</p>
+      </div>
+      <div class="stakeholder-card">
+        <span class="stakeholder-icon">🛍️</span>
+        <h4>Consumers</h4>
+        <p>Access certified, traceable millet products with full supply chain transparency and fair prices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="how-it-works" id="how-it-works">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-tag">🔄 How It Works</div>
+      <h2 class="section-title">Simple Steps, Powerful Impact</h2>
+      <p class="section-desc">The KrishiSetu workflow is designed to be intuitive for first-time smartphone users to enterprise buyers.</p>
+    </div>
+    <div class="steps-timeline">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Register &amp; Verify</h4>
+          <p>Farmers, FPOs, SHGs, processors, and consumers create accounts via the mobile app or web dashboard. The system verifies credentials through the authentication service.</p>
+          <span class="step-badge">👤 Authentication Module</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>List Your Products</h4>
+          <p>Farmers and SHGs upload millet product details — type, quantity, price, location, and certifications. Listings become visible instantly in the marketplace.</p>
+          <span class="step-badge">📦 Product Listing Service</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Browse the Marketplace</h4>
+          <p>Consumers, processors, and buyers discover millet products with origin details, farmer information, pricing, and available quantity — fully transparent.</p>
+          <span class="step-badge">🏪 Marketplace Engine</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Place an Order</h4>
+          <p>Buyers select suitable products and place orders through the platform. Order details are stored in the database and the seller is instantly notified.</p>
+          <span class="step-badge">🛒 Order Management</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Secure Payment</h4>
+          <p>Buyers complete payment through integrated gateways. The system confirms transactions and triggers notifications to both buyer and seller instantly.</p>
+          <span class="step-badge">💳 Payment Gateway</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Order Prepared &amp; Dispatched</h4>
+          <p>After payment confirmation, the farmer or SHG prepares the order. The product is delivered and order status is updated live on the platform.</p>
+          <span class="step-badge">🚚 Logistics Tracking</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4>Traceability &amp; Review</h4>
+          <p>Consumers access the full supply chain — farmer details, cultivation location, certifications, and processing data — building complete trust in the product.</p>
+          <span class="step-badge">🔍 Traceability System</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <h4>Admin Monitoring</h4>
+          <p>The admin dashboard enables real-time monitoring of users, listings, transactions, and platform health — ensuring smooth and secure operations.</p>
+          <span class="step-badge">⚙️ Admin Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MARKETPLACE PREVIEW ===================== -->
+<section class="marketplace-preview" id="marketplace">
+  <div class="container">
+    <div class="mp-header">
+      <div>
+        <div class="section-tag">🛒 Marketplace Preview</div>
+        <h2 class="section-title">Fresh from the Farm</h2>
+      </div>
+      <a href="marketplace.html" class="btn-view-all">View All Products →</a>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img bg1">
+          🌾
+          <span class="product-badge-organic">Organic</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Finger Millet (Ragi) Flour</div>
+          <div class="product-farmer">👨‍🌾 Ramesh Patil, Karnataka</div>
+          <div class="product-footer">
+            <div class="product-price">₹85 <span>/kg</span></div>
+            <button class="btn-add">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img bg2">
+          🌽
+          <span class="product-badge-organic">Certified</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Pearl Millet (Bajra) Whole</div>
+          <div class="product-farmer">🤝 Vidarbha FPO, Maharashtra</div>
+          <div class="product-footer">
+            <div class="product-price">₹55 <span>/kg</span></div>
+            <button class="btn-add">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img bg3">
+          🌿
+          <span class="product-badge-organic">SHG</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Sorghum (Jowar) Grains</div>
+          <div class="product-farmer">👩‍👩‍👧 Mahila SHG, Rajasthan</div>
+          <div class="product-footer">
+            <div class="product-price">₹45 <span>/kg</span></div>
+            <button class="btn-add">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img bg4">
+          🌱
+          <span class="product-badge-organic">FPO</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Foxtail Millet (Kakum)</div>
+          <div class="product-farmer">🤝 Deccan FPO, Telangana</div>
+          <div class="product-footer">
+            <div class="product-price">₹70 <span>/kg</span></div>
+            <button class="btn-add">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA SECTION ===================== -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Join India's Millet Revolution?</h2>
+      <p>Whether you are a farmer, SHG, processor, or conscious consumer — KrishiSetu is built for you.</p>
+      <div class="cta-buttons">
+        <a href="auth.html" class="btn-cta-primary">Join as a Farmer / SHG</a>
+        <a href="marketplace.html" class="btn-cta-secondary">Explore the Marketplace</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-icon">🌾</div>
+          <span class="logo-text" style="color:white;">Krishi<span>Setu</span></span>
+        </div>
+        <p>Bridging the Millet Ecosystem with Technology. Empowering farmers, SHGs, FPOs, and consumers through a transparent, fair, and connected digital platform.</p>
+        <div class="footer-social">
+          <a class="social-btn" href="#">𝕏</a>
+          <a class="social-btn" href="#">in</a>
+          <a class="social-btn" href="#">f</a>
+          <a class="social-btn" href="#">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="marketplace.html">Marketplace</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Stakeholders</h5>
+        <ul>
+          <li><a href="#">Farmers</a></li>
+          <li><a href="#">FPOs</a></li>
+          <li><a href="#">SHGs</a></li>
+          <li><a href="#">Processors</a></li>
+          <li><a href="#">Consumers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Millet Guide</a></li>
+          <li><a href="#">Gov. Schemes</a></li>
+          <li><a href="#">Market Prices</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KrishiSetu. Sharad Institute of Technology, Yadrav-Ichalkaranji.</p>
+      <p class="credits">🌾 Shree Anna — India's Superfood</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

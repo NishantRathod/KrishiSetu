@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Register – KrishiSetu</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .pw-toggle { position:relative; }
+    .pw-toggle input { padding-right:42px; }
+    .pw-eye {
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      cursor:pointer; font-size:1rem; color:var(--gray); user-select:none;
+    }
+    .strength-bar { height:4px; border-radius:4px; margin-top:6px; background:#eee; overflow:hidden; }
+    .strength-fill { height:100%; border-radius:4px; transition:width 0.3s,background 0.3s; width:0; }
+    .form-hint { font-size:0.74rem; color:var(--gray); margin-top:4px; }
+    .social-login { display:flex; gap:10px; margin-bottom:4px; }
+    .social-login-btn {
+      flex:1; padding:10px; border:1.5px solid #E0E0E0; border-radius:var(--radius-sm);
+      background:var(--white); font-size:0.85rem; font-weight:600; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all 0.2s; color:var(--text);
+    }
+    .social-login-btn:hover { border-color:var(--green-primary); background:var(--green-bg); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media(max-width:480px){ .form-row { grid-template-columns:1fr; } }
+    .auth-switch { text-align:center; margin-top:18px; font-size:0.87rem; color:var(--text-muted); }
+    .auth-switch a { color:var(--green-primary); font-weight:700; }
+    .terms-check { display:flex; align-items:flex-start; gap:9px; margin:14px 0; font-size:0.82rem; color:var(--text-muted); }
+    .terms-check input { margin-top:2px; accent-color:var(--green-primary); flex-shrink:0; }
+    .terms-check a { color:var(--green-primary); }
+    .back-home { position:absolute; top:22px; left:28px; font-size:0.85rem; color:rgba(255,255,255,0.7); display:flex; align-items:center; gap:6px; transition:color 0.2s; z-index:10; }
+    .back-home:hover { color:var(--gold); }
+    .register-panel { display:none; }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- Back link -->
+  <a href="index.html" class="back-home">← Back to Home</a>
+
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="logo-icon">🌾</div>
+      <span class="logo-text">Krishi<span>Setu</span></span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab active" data-tab="loginPanel">Login</button>
+      <button class="auth-tab" data-tab="registerPanel">Register</button>
+    </div>
+
+    <!-- ===== LOGIN FORM ===== -->
+    <div id="loginPanel" class="auth-form-panel">
+      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:4px;">Welcome back!</h3>
+      <p style="font-size:0.83rem;color:var(--gray);margin-bottom:22px;">Sign in to your KrishiSetu account</p>
+
+      <form data-validate id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email / Mobile Number</label>
+          <input class="form-input" type="text" placeholder="email@example.com or +91 XXXXX" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex;justify-content:space-between;">
+            Password
+            <a href="#" style="font-size:0.8rem;color:var(--green-primary);font-weight:600;">Forgot password?</a>
+          </label>
+          <div class="pw-toggle">
+            <input class="form-input" type="password" id="loginPw" placeholder="Enter your password" required />
+            <span class="pw-eye" onclick="togglePw('loginPw',this)">👁</span>
+          </div>
+        </div>
+
+        <div class="terms-check">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember me for 30 days</label>
+        </div>
+
+        <button type="submit" class="btn-auth-submit" data-original="Login to KrishiSetu">Login to KrishiSetu</button>
+      </form>
+
+      <div class="auth-divider"><span>or continue with</span></div>
+
+      <div class="social-login">
+        <button class="social-login-btn">🔵 Google</button>
+        <button class="social-login-btn">📱 OTP Login</button>
+      </div>
+
+      <div class="auth-switch">
+        Don't have an account? <a href="#" onclick="switchTab('registerPanel')">Register Free</a>
+      </div>
+    </div>
+
+    <!-- ===== REGISTER FORM ===== -->
+    <div id="registerPanel" class="auth-form-panel register-panel">
+      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:4px;">Create your account</h3>
+      <p style="font-size:0.83rem;color:var(--gray);margin-bottom:22px;">Join India's millet ecosystem — it's free</p>
+
+      <form data-validate id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" placeholder="Nishant" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Rathod" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="email@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mobile Number</label>
+          <input class="form-input" type="tel" placeholder="+91 XXXXX XXXXX" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Register As</label>
+          <select class="form-select" required>
+            <option value="" disabled selected>Select your role</option>
+            <option>👨‍🌾 Farmer</option>
+            <option>🏘️ FPO (Farmer Producer Org.)</option>
+            <option>👩‍👧‍👦 SHG (Self-Help Group)</option>
+            <option>🏭 Processor / Manufacturer</option>
+            <option>🛍️ Consumer / Buyer</option>
+            <option>🚀 Startup / Entrepreneur</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select state</option>
+            <option>Maharashtra</option>
+            <option>Karnataka</option>
+            <option>Rajasthan</option>
+            <option>Telangana</option>
+            <option>Tamil Nadu</option>
+            <option>Madhya Pradesh</option>
+            <option>Andhra Pradesh</option>
+            <option>Odisha</option>
+            <option>Gujarat</option>
+            <option>Uttar Pradesh</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Create Password</label>
+          <div class="pw-toggle">
+            <input class="form-input" type="password" id="regPw" placeholder="Min. 8 characters" required oninput="checkStrength(this.value)" />
+            <span class="pw-eye" onclick="togglePw('regPw',this)">👁</span>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+          <div class="form-hint" id="strengthText">Password strength will appear here</div>
+        </div>
+
+        <div class="terms-check">
+          <input type="checkbox" id="agreeTerms" required />
+          <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of KrishiSetu</label>
+        </div>
+
+        <button type="submit" class="btn-auth-submit" data-original="Create Free Account">Create Free Account</button>
+      </form>
+
+      <div class="auth-switch">
+        Already have an account? <a href="#" onclick="switchTab('loginPanel')">Login</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    function switchTab(panelId) {
+      document.querySelectorAll('.auth-form-panel').forEach(p => p.style.display = 'none');
+      document.getElementById(panelId).style.display = 'block';
+      document.querySelectorAll('.auth-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.tab === panelId);
+      });
+    }
+
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    function togglePw(id, icon) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; }
+      else { input.type = 'password'; icon.textContent = '👁'; }
+    }
+
+    function checkStrength(val) {
+      const fill = document.getElementById('strengthFill');
+      const text = document.getElementById('strengthText');
+      if (!val) { fill.style.width = '0'; text.textContent = ''; return; }
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = [
+        { w:'20%', c:'#EF5350', t:'Weak' },
+        { w:'45%', c:'#FFA726', t:'Fair' },
+        { w:'72%', c:'#66BB6A', t:'Good' },
+        { w:'100%', c:'#2E7D32', t:'Strong 🔒' }
+      ];
+      const l = levels[score - 1] || levels[0];
+      fill.style.width = l.w; fill.style.background = l.c;
+      text.textContent = l.t; text.style.color = l.c;
+    }
+
+    // Show login panel by default; hide register
+    document.getElementById('registerPanel').style.display = 'none';
+  </script>
+</body>
+</html>
