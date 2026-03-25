@@ -14,20 +14,23 @@ def register():
     try:
         data = request.get_json()
 
+        email = (data.get('email') or '').strip().lower()
+        phone = (data.get('phone') or '').strip()
+
         # Validate required fields
-        if not data.get('name') or not data.get('email') or not data.get('password'):
+        if not data.get('name') or not email or not data.get('password'):
             return jsonify({'error': 'Name, email and password are required'}), 400
 
         # Check if user already exists
-        if User.find_by_email(data['email']):
+        if User.find_by_email(email):
             return jsonify({'error': 'Email already registered'}), 400
 
         # Create new user
         user = User(
             name=data['name'],
-            email=data['email'],
+            email=email,
             password=data['password'],
-            phone=data.get('phone'),
+            phone=phone,
             role=data.get('role', 'farmer')
         )
 
@@ -42,7 +45,7 @@ def register():
             'user': {
                 'id': user_id,
                 'name': data['name'],
-                'email': data['email'],
+                'email': email,
                 'role': data.get('role', 'farmer')
             }
         }), 201
@@ -56,17 +59,24 @@ def login():
     try:
         data = request.get_json()
 
-        # Validate required fields
-        if not data.get('email') or not data.get('password'):
-            return jsonify({'error': 'Email and password are required'}), 400
+        identifier = (data.get('identifier') or data.get('email') or '').strip()
+        password = data.get('password')
 
-        # Find user
-        user = User.find_by_email(data['email'])
+        # Validate required fields
+        if not identifier or not password:
+            return jsonify({'error': 'Email/mobile and password are required'}), 400
+
+        # Find user by email or phone
+        if '@' in identifier:
+            user = User.find_by_email(identifier)
+        else:
+            user = User.find_by_phone(identifier) or User.find_by_email(identifier)
+
         if not user:
             return jsonify({'error': 'Invalid email or password'}), 401
 
         # Verify password
-        if not User.verify_password(user['password'], data['password']):
+        if not User.verify_password(user['password'], password):
             return jsonify({'error': 'Invalid email or password'}), 401
 
         # Create access token

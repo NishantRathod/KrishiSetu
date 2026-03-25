@@ -2,13 +2,14 @@ from datetime import datetime
 from database import Database
 from bson import ObjectId
 import bcrypt
+import re
 
 class User:
     """User model"""
 
     def __init__(self, name, email, password, phone=None, role='farmer'):
         self.name = name
-        self.email = email
+        self.email = email.strip().lower() if isinstance(email, str) else email
         self.password = self._hash_password(password)
         self.phone = phone
         self.role = role
@@ -44,7 +45,20 @@ class User:
     def find_by_email(email):
         """Find user by email"""
         db = Database.get_db()
-        return db.users.find_one({'email': email})
+        normalized_email = email.strip().lower() if isinstance(email, str) else email
+        return db.users.find_one({
+            '$or': [
+                {'email': normalized_email},
+                {'email': {'$regex': f'^{re.escape(normalized_email)}$', '$options': 'i'}}
+            ]
+        })
+
+    @staticmethod
+    def find_by_phone(phone):
+        """Find user by phone"""
+        db = Database.get_db()
+        normalized_phone = phone.strip() if isinstance(phone, str) else phone
+        return db.users.find_one({'phone': normalized_phone})
 
     @staticmethod
     def find_by_id(user_id):

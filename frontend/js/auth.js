@@ -64,11 +64,13 @@ async function handleLogin(event) {
     const originalText = submitBtn.textContent;
 
     // Get form data
-    const email = form.querySelector('input[type="text"]').value.trim();
-    const password = form.querySelector('input[type="password"]').value;
+    const emailInput = form.querySelector('input[name="email"]');
+    const passwordInput = form.querySelector('input[name="password"]');
+    const identifier = emailInput ? emailInput.value.trim() : '';
+    const password = passwordInput ? passwordInput.value : '';
 
     // Validate
-    if (!email || !password) {
+    if (!identifier || !password) {
         showNotification('Please fill in all fields', 'error');
         return;
     }
@@ -84,7 +86,7 @@ async function handleLogin(event) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ identifier, email: identifier, password })
         });
 
         const data = await response.json();
@@ -127,13 +129,12 @@ async function handleRegister(event) {
     const originalText = submitBtn.textContent;
 
     // Get form data
-    const inputs = form.querySelectorAll('input, select');
-    const firstName = inputs[0].value.trim();
-    const lastName = inputs[1].value.trim();
-    const email = inputs[2].value.trim();
-    const phone = inputs[3].value.trim();
-    const role = inputs[4].value;
-    const password = inputs[6].value;
+    const firstName = (form.querySelector('input[name="firstName"]')?.value || '').trim();
+    const lastName = (form.querySelector('input[name="lastName"]')?.value || '').trim();
+    const email = (form.querySelector('input[name="email"]')?.value || '').trim();
+    const phone = (form.querySelector('input[name="phone"]')?.value || '').trim();
+    const role = form.querySelector('select[name="role"]')?.value || '';
+    const password = form.querySelector('input[name="password"]')?.value || '';
     const termsChecked = form.querySelector('#agreeTerms').checked;
 
     // Validate
@@ -168,7 +169,7 @@ async function handleRegister(event) {
                 email,
                 password,
                 phone,
-                role: role.split(' ')[1] || 'farmer'  // Extract role from option text
+                role
             })
         });
 
@@ -263,8 +264,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // If on dashboard, protect page and load user info
-    if (window.location.pathname.includes('dashboard.html')) {
+    // If on dashboard/profile, protect page and load user info
+    if (window.location.pathname.includes('dashboard.html') || window.location.pathname.includes('profile.html')) {
         if (protectPage()) {
             loadUserInfo();
         }

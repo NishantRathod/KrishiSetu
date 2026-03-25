@@ -201,6 +201,10 @@
   const forms = document.querySelectorAll('form[data-validate]');
   forms.forEach(form => {
     form.addEventListener('submit', e => {
+      if (form.id === 'loginForm' || form.id === 'registerForm') {
+        return;
+      }
+
       e.preventDefault();
       const inputs = form.querySelectorAll('[required]');
       let valid = true;
