@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FPO Dashboard - KrishiSetu</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/notifications.css" />
+  <style>
+    /* FPO Dashboard - Orange Theme */
+    :root { --role-primary: #E65100; --role-light: #FFF3E0; --role-accent: #FFB74D; }
+    .role-wrap { max-width: 1150px; margin: 28px auto 50px; padding: 0 20px; }
+    .role-card { background: linear-gradient(135deg, #fff3e0 0%, #fff 50%); border-radius: 14px; border: 2px solid var(--role-primary); padding: 24px; box-shadow: 0 8px 24px rgba(230,81,0,0.12); }
+    .role-sub { color: var(--text-muted); margin-top: 8px; }
+    .role-welcome { margin: 12px 0 18px; color: var(--role-primary); font-weight: 700; }
+    .role-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .role-action-item { background: var(--role-light); border: 2px solid var(--role-primary); border-radius: 10px; padding: 12px; font-weight: 700; cursor: pointer; text-align: left; color: var(--role-primary); transition: all 0.2s; }
+    .role-action-item:hover { background: var(--role-primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(230,81,0,0.2); }
+    .top-row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+    .stat-card { background: linear-gradient(135deg, var(--role-light), white); border:2px solid var(--role-accent); border-radius:10px; padding:14px; }
+    .stat-label { font-size:0.8rem; color:var(--text-muted); }
+    .stat-value { font-size:1.15rem; font-weight:800; color:var(--role-primary); margin-top:6px; }
+    .sections-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .section-card { background:#fff; border:2px solid #ffe0b2; border-radius:10px; padding:14px; }
+    .section-title { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; font-size:1rem; font-weight:800; color:var(--role-primary); }
+    .item-row { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid #f0f0f0; }
+    .item-row:last-child { border-bottom:none; }
+    .item-title { font-weight:700; color:var(--text); }
+    .item-meta { font-size:0.8rem; color:var(--text-muted); margin-top:4px; }
+    .item-side { text-align:right; }
+    .item-price { font-weight:800; color:var(--role-primary); }
+    .item-actions { margin-top:6px; display:flex; justify-content:flex-end; gap:6px; }
+    .mini-btn { background:var(--role-light); border:1px solid var(--role-primary); color:var(--role-primary); border-radius:8px; padding:6px 10px; cursor:pointer; font-size:0.78rem; font-weight:600; transition: all 0.2s; }
+    .mini-btn:hover { background:var(--role-primary); color:white; }
+    .mini-btn.danger { background:#FFF2F2; border-color:#f3c5c5; color:#B42318; }
+    .status-badge { display:inline-block; font-size:0.72rem; font-weight:700; text-transform:capitalize; padding:3px 8px; border-radius:999px; }
+    .status-badge.pending { background:#FFF4E5; color:#92400E; }
+    .status-badge.processing { background:#EFF6FF; color:#1D4ED8; }
+    .status-badge.delivered { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color:var(--role-primary); }
+    .status-badge.cancelled { background:#FEF2F2; color:#B42318; }
+    .market-card { border:2px solid var(--role-accent); border-radius:10px; padding:10px; margin-bottom:10px; background: linear-gradient(135deg, var(--role-light), white); }
+    .market-foot { margin-top:8px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .buy-box { display:flex; gap:6px; align-items:center; }
+    .buy-box input { width:64px; padding:5px 7px; border-radius:8px; border:1px solid var(--role-accent); }
+    .empty-text { padding:8px 0; color:var(--text-muted); font-size:0.88rem; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .modal-overlay.active { display:flex; }
+    .modal-card { background:#fff; width:min(520px,92vw); border-radius:12px; padding:16px; border:2px solid var(--role-primary); }
+    .modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .modal-grid .full { grid-column:1 / -1; }
+    .modal-card label { display:block; font-size:0.82rem; color:var(--text-muted); margin-bottom:4px; }
+    .modal-card input, .modal-card select, .modal-card textarea { width:100%; border:1px solid #ffe0b2; border-radius:8px; padding:9px 10px; }
+    .modal-card textarea { min-height:84px; resize:vertical; }
+    .quick-facts { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .fact-item { background: linear-gradient(135deg, var(--role-light), white); padding:12px; border-radius:8px; border-left:4px solid var(--role-primary); }
+    .fact-item strong { display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; }
+    .fact-item span { font-size:1rem; font-weight:800; color:var(--role-primary); }
+    .modal-actions { display:flex; gap:10px; margin-top:12px; }
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns:1fr 1fr; }
+      .sections-grid { grid-template-columns:1fr; }
+      .quick-facts { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width: 680px) {
+      .role-actions { grid-template-columns:1fr; }
+      .stats-grid { grid-template-columns:1fr; }
+      .modal-grid { grid-template-columns:1fr; }
+      .quick-facts { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body data-role="fpo">
+  <nav class="navbar" style="border-bottom:1px solid rgba(46,125,50,0.1);">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">KS</div><span class="logo-text">Krishi<span>Setu</span></span></a>
+      <div class="nav-actions" style="display:flex;gap:10px;">
+        <a id="profileLink" href="profile.html" class="btn-login">Profile</a>
+        <a href="marketplace.html" class="btn-login">Marketplace</a>
+        <a href="#" onclick="KrishiAuth.handleLogout();return false;" class="btn-register">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="role-wrap">
+    <div class="role-card">
+      <div class="top-row">
+        <div>
+          <h1 id="roleTitle">FPO Dashboard</h1>
+          <p id="roleSubtitle" class="role-sub"></p>
+          <p id="roleWelcome" class="role-welcome"></p>
+          <p>Signed in as: <strong id="roleUserName"></strong></p>
+        </div>
+        <div>
+          <button id="refreshBtn" class="mini-btn">Refresh</button>
+        </div>
+      </div>
+
+      <div id="roleActions" class="role-actions"></div>
+
+      <div id="statsGrid" class="stats-grid"></div>
+
+      <div class="sections-grid">
+        <section id="listingsSection" class="section-card">
+          <div class="section-title">
+            <span>My Listings</span>
+            <button id="addListingBtn" class="mini-btn">Add Listing</button>
+          </div>
+          <div id="listingsList"></div>
+        </section>
+
+        <section class="section-card">
+          <div class="section-title">
+            <span>Orders</span>
+          </div>
+          <div id="ordersList"></div>
+        </section>
+
+        <section class="section-card" style="grid-column:1 / -1;">
+          <div class="section-title">
+            <span>Marketplace Snapshot</span>
+          </div>
+          <div id="marketList"></div>
+        </section>
+
+        <div id="roleSpecificSection"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="listingModal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 style="margin-bottom:10px;">Listing</h3>
+      <form id="listingForm">
+        <input type="hidden" id="listingId" />
+        <div class="modal-grid">
+          <div class="full">
+            <label for="listingTitle">Title</label>
+            <input id="listingTitle" type="text" required />
+          </div>
+          <div>
+            <label for="listingCategory">Category</label>
+            <select id="listingCategory" required>
+              <option value="">Select</option>
+              <option value="millets">Millets</option>
+              <option value="grains">Grains</option>
+              <option value="processed">Processed</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="listingUnit">Unit</label>
+            <select id="listingUnit" required>
+              <option value="kg">kg</option>
+              <option value="quintal">quintal</option>
+              <option value="ton">ton</option>
+              <option value="piece">piece</option>
+            </select>
+          </div>
+          <div>
+            <label for="listingPrice">Price</label>
+            <input id="listingPrice" type="number" min="0" step="0.01" required />
+          </div>
+          <div>
+            <label for="listingQuantity">Quantity</label>
+            <input id="listingQuantity" type="number" min="0" step="0.01" required />
+          </div>
+          <div class="full">
+            <label for="listingDescription">Description</label>
+            <textarea id="listingDescription" required></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="mini-btn" id="closeListingModal">Cancel</button>
+          <button type="submit" class="mini-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/role-dashboard.js"></script>
+</body>
+</html>

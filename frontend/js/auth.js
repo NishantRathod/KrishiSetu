@@ -55,6 +55,26 @@ function isLoggedIn() {
     return !!getToken();
 }
 
+// Map user role to its post-login dashboard
+function getRoleDashboardPath(role) {
+    const roleMap = {
+        farmer: 'dashboard-farmer.html',
+        fpo: 'dashboard-fpo.html',
+        shg: 'dashboard-shg.html',
+        processor: 'dashboard-processor.html',
+        consumer: 'dashboard-consumer.html',
+        startup: 'dashboard-startup.html'
+    };
+
+    return roleMap[(role || '').toLowerCase()] || 'dashboard-farmer.html';
+}
+
+// Redirect user based on selected/assigned role
+function redirectToRoleDashboard() {
+    const userData = getUserData() || {};
+    window.location.href = getRoleDashboardPath(userData.role);
+}
+
 // Handle Login
 async function handleLogin(event) {
     event.preventDefault();
@@ -102,7 +122,7 @@ async function handleLogin(event) {
 
             // Redirect to dashboard after short delay
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                redirectToRoleDashboard();
             }, 1000);
 
         } else {
@@ -186,7 +206,7 @@ async function handleRegister(event) {
 
             // Redirect to dashboard after short delay
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                redirectToRoleDashboard();
             }, 1500);
 
         } else {
@@ -232,8 +252,14 @@ function loadUserInfo() {
         // Update dashboard with user info
         const userNameEl = document.getElementById('userName');
         const userRoleEl = document.getElementById('userRole');
+        const greetingNameEl = document.getElementById('greetingName');
 
-        if (userNameEl) userNameEl.textContent = userData.name || 'User';
+        // Get first name for greeting
+        const fullName = userData.name || 'User';
+        const firstName = fullName.split(' ')[0];
+
+        if (userNameEl) userNameEl.textContent = fullName;
+        if (greetingNameEl) greetingNameEl.textContent = firstName;
         if (userRoleEl) {
             const role = userData.role || 'farmer';
             const roleDisplay = role.charAt(0).toUpperCase() + role.slice(1);
@@ -271,9 +297,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // If logged in and on auth page, redirect to dashboard
+    // If logged in and on auth page, redirect to role dashboard
     if (window.location.pathname.includes('auth.html') && isLoggedIn()) {
-        window.location.href = 'dashboard.html';
+        redirectToRoleDashboard();
     }
 });
 
@@ -284,6 +310,8 @@ window.KrishiAuth = {
     handleLogout,
     isLoggedIn,
     getUserData,
+    getRoleDashboardPath,
+    redirectToRoleDashboard,
     protectPage,
     loadUserInfo,
     showNotification

@@ -18,6 +18,18 @@ function formatDate(value) {
   }
 }
 
+function updateDashboardLinks(role) {
+  const dashboardPath = window.KrishiAuth?.getRoleDashboardPath
+    ? window.KrishiAuth.getRoleDashboardPath(role)
+    : 'dashboard-farmer.html';
+
+  const headerDashboardLink = document.getElementById('profileDashboardLink');
+  const backDashboardLink = document.getElementById('profileBackDashboardLink');
+
+  if (headerDashboardLink) headerDashboardLink.href = dashboardPath;
+  if (backDashboardLink) backDashboardLink.href = dashboardPath;
+}
+
 async function loadProfile() {
   const token = localStorage.getItem('authToken');
   if (!token) {
@@ -53,6 +65,7 @@ async function loadProfile() {
     document.getElementById('profilePhone').value = profile.phone || '';
     document.getElementById('profileEmail').textContent = profile.email || '-';
     document.getElementById('profileRole').textContent = formatRole(profile.role);
+    updateDashboardLinks(profile.role);
 
     const joinedOn = formatDate(profile.created_at);
     document.getElementById('profileMeta').textContent = joinedOn ? `Joined on ${joinedOn}` : '';
@@ -130,6 +143,9 @@ async function handleProfileUpdate(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const cachedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+  updateDashboardLinks(cachedUser.role);
+
   const form = document.getElementById('profileForm');
   if (form) {
     form.addEventListener('submit', handleProfileUpdate);

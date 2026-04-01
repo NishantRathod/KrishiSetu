@@ -9,6 +9,7 @@
   <style>
     /* ---- Dashboard extras ---- */
     .notif-dot { display:inline-block; width:8px; height:8px; background:#EF5350; border-radius:50%; margin-left:4px; vertical-align:middle; }
+    .notif-dot.hidden { display:none; }
     .price-ticker { display:flex; gap:16px; flex-wrap:wrap; background:var(--green-bg); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:24px; border:1px solid var(--border,#D8EED9); font-size:0.87rem; }
     .ticker-item { display:flex; align-items:center; gap:7px; }
     .ticker-item .crop { font-weight:700; color:var(--green-dark); }
@@ -35,15 +36,18 @@
     .listing-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-light,#F5F5F5); }
     .listing-row:last-child { border:none; }
     .listing-icon { font-size:1.5rem; width:40px; height:40px; border-radius:10px; background:var(--green-bg,#F1F8E9); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .listing-info { flex:1; }
     .listing-info .l-name { font-size:0.87rem; font-weight:700; color:var(--text,#1A1A1A); }
     .listing-info .l-detail { font-size:0.76rem; color:var(--gray,#9E9E9E); }
-    .listing-price { margin-left:auto; font-weight:800; font-size:0.9rem; color:var(--green-primary,#2E7D32); }
-    .listing-status { font-size:0.72rem; padding:3px 9px; border-radius:50px; font-weight:600; }
-    .ls-active { background:#E8F5E9; color:#2E7D32; }
-    .ls-sold { background:#EDE7F6; color:#6A1B9A; }
-    .ls-pending { background:#FFF8E1; color:#F57C00; }
-    .map-placeholder { background:linear-gradient(135deg,#E8F5E9,#C8E6C9); border-radius:var(--radius-sm,8px); height:170px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; color:var(--green-dark,#1B5E20); font-size:0.9rem; font-weight:600; margin-top:12px; }
-    .map-placeholder .map-icon { font-size:2.5rem; }
+    .listing-price { font-weight:800; font-size:0.9rem; color:var(--green-primary,#2E7D32); }
+    .listing-status { font-size:0.72rem; padding:3px 9px; border-radius:50px; font-weight:600; margin-right:8px; }
+    .ls-available { background:#E8F5E9; color:#2E7D32; }
+    .ls-sold_out { background:#EDE7F6; color:#6A1B9A; }
+    .ls-low { background:#FFF8E1; color:#F57C00; }
+    .listing-actions { display:flex; gap:6px; }
+    .listing-actions button { padding:4px 10px; font-size:0.72rem; border-radius:4px; cursor:pointer; border:none; }
+    .btn-edit { background:#E3F2FD; color:#1565C0; }
+    .btn-delete { background:#FFEBEE; color:#C62828; }
     .stat-card-green { background:linear-gradient(135deg,var(--green-primary,#2E7D32),var(--green-mid,#388E3C)); }
     .stat-card-green .ds-label,.stat-card-green .ds-value,.stat-card-green .ds-change { color:white; }
     .stat-card-green .ds-icon { background:rgba(255,255,255,0.2); }
@@ -54,6 +58,23 @@
     .topbar-search { display:flex; align-items:center; gap:9px; background:var(--green-bg,#F1F8E9); border:1px solid rgba(46,125,50,0.15); border-radius:8px; padding:8px 14px; font-size:0.87rem; color:var(--gray,#9E9E9E); max-width:220px; }
     .topbar-search input { background:none; border:none; outline:none; font-size:0.87rem; width:100%; color:var(--text,#1A1A1A); }
     .topbar-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--green-primary,#2E7D32),#81C784); display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; }
+    .empty-state { text-align:center; padding:40px 20px; color:var(--gray); }
+    .empty-state .empty-icon { font-size:2.5rem; margin-bottom:12px; }
+    .empty-state p { font-size:0.9rem; margin-bottom:16px; }
+    .empty-state .btn-add { padding:10px 20px; background:var(--green-primary); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; }
+    /* Modal styles */
+    .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; visibility:hidden; transition:all 0.3s; }
+    .modal-overlay.active { opacity:1; visibility:visible; }
+    .modal { background:white; border-radius:12px; padding:24px; max-width:500px; width:90%; max-height:90vh; overflow-y:auto; }
+    .modal h3 { margin-bottom:20px; color:var(--green-dark); }
+    .modal .form-group { margin-bottom:16px; }
+    .modal label { display:block; margin-bottom:6px; font-weight:600; font-size:0.87rem; color:var(--text); }
+    .modal input, .modal select, .modal textarea { width:100%; padding:10px 14px; border:1.5px solid var(--border,#D8EED9); border-radius:8px; font-size:0.9rem; }
+    .modal textarea { min-height:80px; resize:vertical; }
+    .modal-actions { display:flex; gap:12px; margin-top:20px; }
+    .modal-actions button { flex:1; padding:12px; border-radius:8px; font-weight:600; cursor:pointer; border:none; }
+    .btn-cancel { background:var(--gray-light,#F5F5F5); color:var(--text); }
+    .btn-submit { background:var(--green-primary); color:white; }
     @media(max-width:768px){ .dashboard-layout{display:block;} .sidebar{min-height:auto;} .dash-stats{grid-template-columns:1fr 1fr;} .dash-grid-2{grid-template-columns:1fr;} }
   </style>
 </head>
@@ -71,7 +92,7 @@
         <span>🔍</span>
         <input type="text" placeholder="Search..." />
       </div>
-      <span style="font-size:1.2rem;cursor:pointer;position:relative;">🔔<span class="notif-dot"></span></span>
+      <span style="font-size:1.2rem;cursor:pointer;position:relative;">🔔<span class="notif-dot hidden" id="notifDot"></span></span>
       <div class="topbar-avatar">👨‍🌾</div>
     </div>
   </div>
@@ -84,8 +105,8 @@
   <aside class="sidebar">
     <div class="sidebar-user">
       <div class="sidebar-avatar">👨‍🌾</div>
-      <div class="user-name" id="userName">Ramesh Patil</div>
-      <div class="user-role" id="userRole">Farmer · Dharwad, Karnataka</div>
+      <div class="user-name" id="userName">Loading...</div>
+      <div class="user-role" id="userRole">KrishiSetu</div>
     </div>
 
     <div class="sidebar-menu">
@@ -95,11 +116,11 @@
       </div>
       <div class="sidebar-menu-item">
         <span class="menu-icon">🛒</span> My Listings
-        <span style="margin-left:auto;background:rgba(249,168,37,0.25);color:#F9A825;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">5</span>
+        <span id="listingsCount" style="margin-left:auto;background:rgba(249,168,37,0.25);color:#F9A825;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">0</span>
       </div>
       <div class="sidebar-menu-item">
         <span class="menu-icon">📦</span> Orders
-        <span style="margin-left:auto;background:rgba(76,175,80,0.25);color:#81C784;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">3</span>
+        <span id="ordersCount" style="margin-left:auto;background:rgba(76,175,80,0.25);color:#81C784;font-size:0.68rem;font-weight:700;padding:1px 7px;border-radius:50px;">0</span>
       </div>
       <div class="sidebar-menu-item">
         <span class="menu-icon">💰</span> Earnings
@@ -113,7 +134,8 @@
         <span class="menu-icon">🔍</span> Traceability
       </div>
       <div class="sidebar-menu-item">
-        <span class="menu-icon">🌾</span> Marketplace
+        <span class="menu-icon">🌾</span>
+        <a href="marketplace.html" style="color:inherit;font-size:0.88rem;">Marketplace</a>
       </div>
       <div class="sidebar-menu-item">
         <span class="menu-icon">📋</span> Gov. Schemes
@@ -139,12 +161,12 @@
 
     <div class="dash-header">
       <div>
-        <h1>Good Morning, Ramesh 👋</h1>
-        <p>Here's what's happening in your millet farm today — 14 March 2026</p>
+        <h1 id="greeting">Good Morning, <span id="greetingName">User</span> 👋</h1>
+        <p id="dateText">Here's what's happening today</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a href="marketplace.html" style="padding:10px 20px;background:var(--green-primary);color:white;border-radius:8px;font-size:0.87rem;font-weight:700;">+ Add Listing</a>
-        <a href="marketplace.html" style="padding:10px 20px;background:var(--green-bg);border:1.5px solid rgba(46,125,50,0.2);border-radius:8px;font-size:0.87rem;font-weight:600;color:var(--green-dark);">View Marketplace</a>
+        <button onclick="openListingModal()" style="padding:10px 20px;background:var(--green-primary);color:white;border:none;border-radius:8px;font-size:0.87rem;font-weight:700;cursor:pointer;">+ Add Listing</button>
+        <a href="marketplace.html" style="padding:10px 20px;background:var(--green-bg);border:1.5px solid rgba(46,125,50,0.2);border-radius:8px;font-size:0.87rem;font-weight:600;color:var(--green-dark);text-decoration:none;">View Marketplace</a>
       </div>
     </div>
 
@@ -163,26 +185,26 @@
       <div class="dash-stat-card stat-card-green">
         <div class="ds-icon g">💰</div>
         <div class="ds-label">This Month's Revenue</div>
-        <div class="ds-value">₹18,450</div>
-        <div class="ds-change">↑ 12.4% vs last month</div>
+        <div class="ds-value" id="statRevenue">₹0</div>
+        <div class="ds-change" id="statRevenueChange">No sales yet</div>
       </div>
       <div class="dash-stat-card">
         <div class="ds-icon go">📦</div>
         <div class="ds-label">Active Listings</div>
-        <div class="ds-value">5</div>
-        <div class="ds-change" style="color:#F9A825;">3 getting views now</div>
+        <div class="ds-value" id="statListings">0</div>
+        <div class="ds-change" style="color:#F9A825;" id="statListingsInfo">Add your first listing</div>
       </div>
       <div class="dash-stat-card">
         <div class="ds-icon b">🛒</div>
         <div class="ds-label">Pending Orders</div>
-        <div class="ds-value">3</div>
-        <div class="ds-change" style="color:#1565C0;">1 awaiting dispatch</div>
+        <div class="ds-value" id="statOrders">0</div>
+        <div class="ds-change" style="color:#1565C0;" id="statOrdersInfo">No pending orders</div>
       </div>
       <div class="dash-stat-card stat-card-gold">
         <div class="ds-icon go">⭐</div>
         <div class="ds-label">Seller Rating</div>
-        <div class="ds-value">4.8 / 5</div>
-        <div class="ds-change">Based on 128 reviews</div>
+        <div class="ds-value" id="statRating">- / 5</div>
+        <div class="ds-change" id="statRatingInfo">No reviews yet</div>
       </div>
     </div>
 
@@ -204,41 +226,11 @@
           Recent Orders
           <a href="#">View All</a>
         </div>
-        <div class="order-item">
-          <span class="order-icon">🌿</span>
-          <div class="order-info">
-            <div class="o-name">Ragi Grain — 50 kg</div>
-            <div class="o-date">Mar 13, 2026 · Meghna Foods, Pune</div>
+        <div id="ordersList">
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <p>No orders yet</p>
           </div>
-          <div class="order-amount">₹4,250</div>
-          <span class="order-status status-delivered">Delivered</span>
-        </div>
-        <div class="order-item">
-          <span class="order-icon">🌽</span>
-          <div class="order-info">
-            <div class="o-name">Bajra Whole — 100 kg</div>
-            <div class="o-date">Mar 11, 2026 · Rajesh Stores, Mumbai</div>
-          </div>
-          <div class="order-amount">₹5,500</div>
-          <span class="order-status status-processing">In Transit</span>
-        </div>
-        <div class="order-item">
-          <span class="order-icon">🍃</span>
-          <div class="order-info">
-            <div class="o-name">Jowar Grain — 80 kg</div>
-            <div class="o-date">Mar 10, 2026 · NutriHarvest, Bengaluru</div>
-          </div>
-          <div class="order-amount">₹3,600</div>
-          <span class="order-status status-pending">Pending</span>
-        </div>
-        <div class="order-item">
-          <span class="order-icon">🌱</span>
-          <div class="order-info">
-            <div class="o-name">Foxtail Millet — 30 kg</div>
-            <div class="o-date">Mar 9, 2026 · Green Cart, Hyderabad</div>
-          </div>
-          <div class="order-amount">₹2,100</div>
-          <span class="order-status status-delivered">Delivered</span>
         </div>
       </div>
 
@@ -251,8 +243,8 @@
         <div class="bar-chart" id="salesChart"></div>
         <div class="bar-labels" id="chartLabels"></div>
         <div style="margin-top:16px;display:flex;gap:20px;font-size:0.8rem;color:var(--text-muted);">
-          <span>🟩 Millets sold</span>
-          <span style="margin-left:auto;">Total: <strong style="color:var(--green-dark)">₹1,84,500</strong></span>
+          <span>🟩 Revenue</span>
+          <span style="margin-left:auto;">Total: <strong style="color:var(--green-dark)" id="totalRevenue">₹0</strong></span>
         </div>
       </div>
 
@@ -260,43 +252,14 @@
       <div class="dash-card">
         <div class="dash-card-title">
           My Active Listings
-          <a href="#">Manage</a>
+          <a href="#" onclick="openListingModal(); return false;">+ Add New</a>
         </div>
-        <div class="listing-row">
-          <div class="listing-icon">🌿</div>
-          <div class="listing-info">
-            <div class="l-name">Finger Millet (Ragi) Grain</div>
-            <div class="l-detail">250 kg available · ₹85/kg</div>
+        <div id="listingsList">
+          <div class="empty-state">
+            <div class="empty-icon">🌾</div>
+            <p>No listings yet. Add your first product!</p>
+            <button class="btn-add" onclick="openListingModal()">+ Add Listing</button>
           </div>
-          <span class="listing-status ls-active">Active</span>
-          <div class="listing-price">₹85<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
-        </div>
-        <div class="listing-row">
-          <div class="listing-icon">🌽</div>
-          <div class="listing-info">
-            <div class="l-name">Pearl Millet (Bajra) Whole</div>
-            <div class="l-detail">400 kg available · ₹55/kg</div>
-          </div>
-          <span class="listing-status ls-active">Active</span>
-          <div class="listing-price">₹55<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
-        </div>
-        <div class="listing-row">
-          <div class="listing-icon">🍃</div>
-          <div class="listing-info">
-            <div class="l-name">Sorghum (Jowar) Grain</div>
-            <div class="l-detail">120 kg available · ₹45/kg</div>
-          </div>
-          <span class="listing-status ls-pending">Low Stock</span>
-          <div class="listing-price">₹45<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
-        </div>
-        <div class="listing-row">
-          <div class="listing-icon">🌱</div>
-          <div class="listing-info">
-            <div class="l-name">Foxtail Millet (Kangni)</div>
-            <div class="l-detail">Sold out — 500 kg</div>
-          </div>
-          <span class="listing-status ls-sold">Sold Out</span>
-          <div class="listing-price">₹70<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/kg</span></div>
         </div>
       </div>
 
@@ -306,55 +269,11 @@
           Notifications
           <a href="#">Mark all read</a>
         </div>
-        <div class="notification-list">
-          <div class="notif-item">
-            <div class="notif-icon">🛒</div>
-            <div>
-              <div class="notif-text"><strong>New Order Received</strong>Meghna Foods placed an order for 50 kg Ragi Grain.</div>
-              <div class="notif-time">2 hours ago</div>
-            </div>
+        <div id="notificationsList" class="notification-list">
+          <div class="empty-state">
+            <div class="empty-icon">🔔</div>
+            <p>No notifications</p>
           </div>
-          <div class="notif-item">
-            <div class="notif-icon">💰</div>
-            <div>
-              <div class="notif-text"><strong>Payment Received</strong>₹4,250 credited for Order #KS-2024 (Ragi Grain).</div>
-              <div class="notif-time">Yesterday, 3:40 PM</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-icon">📊</div>
-            <div>
-              <div class="notif-text"><strong>Price Alert</strong>Foxtail millet price rose 3.1% today — ₹70/kg in your region.</div>
-              <div class="notif-time">Mar 13, 9:00 AM</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-icon">⭐</div>
-            <div>
-              <div class="notif-text"><strong>New Review</strong>Rajesh Stores rated your Bajra Whole — ★★★★★ "Excellent quality!"</div>
-              <div class="notif-time">Mar 12, 6:15 PM</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-icon">🏛️</div>
-            <div>
-              <div class="notif-text"><strong>Gov. Scheme Update</strong>PM-AASHA price support scheme enrollment is open till March 31.</div>
-              <div class="notif-time">Mar 11, 10:00 AM</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FARM LOCATION MAP (placeholder) -->
-      <div class="dash-card dash-full">
-        <div class="dash-card-title">
-          Farm Location &amp; Delivery Reach
-          <span style="font-size:0.78rem;color:var(--gray)">Dharwad, Karnataka</span>
-        </div>
-        <div class="map-placeholder">
-          <div class="map-icon">🗺️</div>
-          <div>Interactive map will load here</div>
-          <div style="font-size:0.78rem;color:var(--text-muted);font-weight:400">Your farm · Dharwad, Karnataka · Delivery radius: 200 km</div>
         </div>
       </div>
 
@@ -363,47 +282,552 @@
   </main>
 </div>
 
+<!-- ADD/EDIT LISTING MODAL -->
+<div class="modal-overlay" id="listingModal">
+  <div class="modal">
+    <h3 id="modalTitle">Add New Listing</h3>
+    <form id="listingForm">
+      <input type="hidden" id="listingId" value="">
+      <div class="form-group">
+        <label for="listingTitle">Product Title *</label>
+        <input type="text" id="listingTitle" placeholder="e.g., Finger Millet (Ragi)" required>
+      </div>
+      <div class="form-group">
+        <label for="listingCategory">Category *</label>
+        <select id="listingCategory" required>
+          <option value="">Select category</option>
+          <option value="millets">Millets</option>
+          <option value="grains">Grains</option>
+          <option value="pulses">Pulses</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="fruits">Fruits</option>
+          <option value="spices">Spices</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="listingDescription">Description</label>
+        <textarea id="listingDescription" placeholder="Describe your product..."></textarea>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div class="form-group" style="flex:1;">
+          <label for="listingPrice">Price (₹) *</label>
+          <input type="number" id="listingPrice" placeholder="85" min="0" step="0.01" required>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label for="listingUnit">Unit *</label>
+          <select id="listingUnit" required>
+            <option value="kg">per kg</option>
+            <option value="quintal">per quintal</option>
+            <option value="ton">per ton</option>
+            <option value="piece">per piece</option>
+            <option value="dozen">per dozen</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="listingQuantity">Available Quantity *</label>
+        <input type="number" id="listingQuantity" placeholder="100" min="0" step="0.1" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeListingModal()">Cancel</button>
+        <button type="submit" class="btn-submit" id="submitBtn">Add Listing</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="js/app.js"></script>
 <script src="js/auth.js"></script>
 <script>
-  // Bar chart
-  const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
-  const values = [8200, 12400, 9800, 15600, 18200, 21000, 16400, 18450];
-  const max = Math.max(...values);
-  const chart = document.getElementById('salesChart');
-  const labels = document.getElementById('chartLabels');
-  months.forEach((m, i) => {
-    const col = document.createElement('div');
-    col.style.cssText = `flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;`;
-    const bar = document.createElement('div');
-    bar.className = 'bar';
-    bar.style.height = Math.round((values[i] / max) * 96) + 'px';
-    bar.title = '₹' + values[i].toLocaleString('en-IN');
-    col.appendChild(bar);
-    chart.appendChild(col);
-    const lbl = document.createElement('span');
-    lbl.textContent = m;
-    lbl.style.cssText = 'flex:1;text-align:center;font-size:0.68rem;color:var(--gray);';
-    labels.appendChild(lbl);
+  const API_BASE_URL = 'http://localhost:5000/api';
+
+  // Get auth token
+  function getAuthToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  // Show notification (fallback if KrishiAuth not available)
+  function showNotification(message, type = 'info') {
+    if (window.KrishiAuth && showNotification) {
+      showNotification(message, type);
+    } else {
+      alert(message);
+    }
+  }
+
+  // Format currency
+  function formatCurrency(amount) {
+    return '₹' + Number(amount).toLocaleString('en-IN');
+  }
+
+  // Format date
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // Get time ago
+  function timeAgo(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
+    return formatDate(dateStr);
+  }
+
+  // Set greeting based on time
+  function setGreeting() {
+    const hour = new Date().getHours();
+    let greeting = 'Good Morning';
+    if (hour >= 12 && hour < 17) greeting = 'Good Afternoon';
+    else if (hour >= 17) greeting = 'Good Evening';
+
+    // Get user's first name from localStorage
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const fullName = userData.name || 'User';
+    const firstName = fullName.split(' ')[0];
+
+    document.getElementById('greeting').innerHTML = `${greeting}, <span id="greetingName">${firstName}</span> 👋`;
+
+    // Set current date
+    const today = new Date();
+    document.getElementById('dateText').textContent = `Here's what's happening today — ${today.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  }
+
+  // Load dashboard stats
+  async function loadStats() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/dashboard/stats`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const stats = data.stats;
+
+        document.getElementById('statRevenue').textContent = formatCurrency(stats.monthly_revenue);
+        document.getElementById('statRevenueChange').textContent = stats.monthly_revenue > 0 ?
+          `Total: ${formatCurrency(stats.total_revenue)}` : 'No sales yet';
+
+        document.getElementById('statListings').textContent = stats.active_listings;
+        document.getElementById('statListingsInfo').textContent = stats.active_listings > 0 ?
+          `${stats.total_listings} total listings` : 'Add your first listing';
+
+        document.getElementById('statOrders').textContent = stats.pending_orders;
+        document.getElementById('statOrdersInfo').textContent = stats.pending_orders > 0 ?
+          `${stats.pending_orders} awaiting action` : 'No pending orders';
+
+        document.getElementById('listingsCount').textContent = stats.active_listings;
+        document.getElementById('ordersCount').textContent = stats.pending_orders;
+
+        if (stats.average_rating > 0) {
+          document.getElementById('statRating').textContent = `${stats.average_rating.toFixed(1)} / 5`;
+          document.getElementById('statRatingInfo').textContent = `Based on ${stats.total_reviews} reviews`;
+        }
+
+        document.getElementById('totalRevenue').textContent = formatCurrency(stats.total_revenue);
+      }
+    } catch (error) {
+      console.error('Failed to load stats:', error);
+    }
+  }
+
+  // Load listings
+  async function loadListings() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/dashboard/listings`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const container = document.getElementById('listingsList');
+
+        if (data.listings.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">🌾</div>
+              <p>No listings yet. Add your first product!</p>
+              <button class="btn-add" onclick="openListingModal()">+ Add Listing</button>
+            </div>
+          `;
+          return;
+        }
+
+        const icons = ['🌿', '🌽', '🍃', '🌱', '🌾', '🥬'];
+        container.innerHTML = data.listings.map((listing, i) => {
+          const statusClass = listing.quantity <= 0 ? 'sold_out' :
+                             listing.quantity < 50 ? 'low' : 'available';
+          const statusText = listing.quantity <= 0 ? 'Sold Out' :
+                            listing.quantity < 50 ? 'Low Stock' : 'Active';
+          return `
+            <div class="listing-row" data-id="${listing.id}">
+              <div class="listing-icon">${icons[i % icons.length]}</div>
+              <div class="listing-info">
+                <div class="l-name">${listing.title}</div>
+                <div class="l-detail">${listing.quantity} ${listing.unit} available · ${formatCurrency(listing.price)}/${listing.unit}</div>
+              </div>
+              <span class="listing-status ls-${statusClass}">${statusText}</span>
+              <div class="listing-price">${formatCurrency(listing.price)}<span style="font-size:0.72rem;font-weight:500;color:var(--gray)">/${listing.unit}</span></div>
+              <div class="listing-actions">
+                <button class="btn-edit" onclick="editListing('${listing.id}')">Edit</button>
+                <button class="btn-delete" onclick="deleteListing('${listing.id}')">Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load listings:', error);
+    }
+  }
+
+  // Load orders
+  async function loadOrders() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/dashboard/orders`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const container = document.getElementById('ordersList');
+
+        if (data.orders.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">📦</div>
+              <p>No orders yet</p>
+            </div>
+          `;
+          return;
+        }
+
+        const icons = ['🌿', '🌽', '🍃', '🌱'];
+        const statusClasses = {
+          'pending': 'status-pending',
+          'processing': 'status-processing',
+          'in_transit': 'status-processing',
+          'delivered': 'status-delivered',
+          'cancelled': 'status-cancelled'
+        };
+
+        container.innerHTML = data.orders.map((order, i) => `
+          <div class="order-item">
+            <span class="order-icon">${icons[i % icons.length]}</span>
+            <div class="order-info">
+              <div class="o-name">${order.product_name} — ${order.quantity} ${order.product_unit || 'units'}</div>
+              <div class="o-date">${formatDate(order.created_at)} · ${order.buyer_name}</div>
+            </div>
+            <div class="order-amount">${formatCurrency(order.total_price)}</div>
+            <span class="order-status ${statusClasses[order.status] || 'status-pending'}">${order.status.replace('_', ' ').toUpperCase()}</span>
+          </div>
+        `).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+    }
+  }
+
+  // Load notifications
+  async function loadNotifications() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/dashboard/notifications`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const container = document.getElementById('notificationsList');
+
+        if (data.notifications.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">🔔</div>
+              <p>No notifications</p>
+            </div>
+          `;
+          document.getElementById('notifDot').classList.add('hidden');
+          return;
+        }
+
+        document.getElementById('notifDot').classList.remove('hidden');
+
+        const typeIcons = {
+          'order': '🛒',
+          'payment': '💰',
+          'review': '⭐',
+          'alert': '📊'
+        };
+
+        container.innerHTML = data.notifications.map(notif => `
+          <div class="notif-item">
+            <div class="notif-icon">${typeIcons[notif.type] || '🔔'}</div>
+            <div>
+              <div class="notif-text"><strong>${notif.title}</strong>${notif.message}</div>
+              <div class="notif-time">${timeAgo(notif.created_at)}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    }
+  }
+
+  // Open listing modal
+  function openListingModal(listingData = null) {
+    document.getElementById('listingModal').classList.add('active');
+    document.getElementById('listingForm').reset();
+    document.getElementById('listingId').value = '';
+
+    if (listingData) {
+      document.getElementById('modalTitle').textContent = 'Edit Listing';
+      document.getElementById('submitBtn').textContent = 'Update Listing';
+      document.getElementById('listingId').value = listingData.id;
+      document.getElementById('listingTitle').value = listingData.title;
+      document.getElementById('listingCategory').value = listingData.category;
+      document.getElementById('listingDescription').value = listingData.description || '';
+      document.getElementById('listingPrice').value = listingData.price;
+      document.getElementById('listingUnit').value = listingData.unit;
+      document.getElementById('listingQuantity').value = listingData.quantity;
+    } else {
+      document.getElementById('modalTitle').textContent = 'Add New Listing';
+      document.getElementById('submitBtn').textContent = 'Add Listing';
+    }
+  }
+
+  // Close listing modal
+  function closeListingModal() {
+    document.getElementById('listingModal').classList.remove('active');
+  }
+
+  // Edit listing
+  async function editListing(id) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/marketplace/products/${id}`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        openListingModal(data.product);
+      }
+    } catch (error) {
+      console.error('Failed to fetch listing:', error);
+    }
+  }
+
+  // Delete listing
+  async function deleteListing(id) {
+    if (!confirm('Are you sure you want to delete this listing?')) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/marketplace/products/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+
+      if (response.ok) {
+        showNotification('Listing deleted successfully', 'success');
+        loadListings();
+        loadStats();
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'Failed to delete listing', 'error');
+      }
+    } catch (error) {
+      console.error('Failed to delete listing:', error);
+      showNotification('Failed to delete listing', 'error');
+    }
+  }
+
+  // Handle listing form submit
+  document.getElementById('listingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('listingId').value;
+    const listingData = {
+      title: document.getElementById('listingTitle').value,
+      category: document.getElementById('listingCategory').value,
+      description: document.getElementById('listingDescription').value,
+      price: parseFloat(document.getElementById('listingPrice').value),
+      unit: document.getElementById('listingUnit').value,
+      quantity: parseFloat(document.getElementById('listingQuantity').value)
+    };
+
+    try {
+      const url = id ?
+        `${API_BASE_URL}/marketplace/products/${id}` :
+        `${API_BASE_URL}/marketplace/products`;
+
+      const response = await fetch(url, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        },
+        body: JSON.stringify(listingData)
+      });
+
+      if (response.ok) {
+        closeListingModal();
+        showNotification(id ? 'Listing updated!' : 'Listing added!', 'success');
+        loadListings();
+        loadStats();
+      } else {
+        const data = await response.json();
+        showNotification(data.error || 'Failed to save listing', 'error');
+      }
+    } catch (error) {
+      console.error('Failed to save listing:', error);
+      showNotification('Failed to save listing', 'error');
+    }
   });
 
-  // Sidebar clicks
-  document.querySelectorAll('.sidebar-menu-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.sidebar-menu-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
+  // Build chart with zeros
+  function buildChart() {
+    const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+    const values = [0, 0, 0, 0, 0, 0, 0, 0]; // Start with zeros
+    const max = Math.max(...values, 1); // Avoid division by zero
+    const chart = document.getElementById('salesChart');
+    const labels = document.getElementById('chartLabels');
+
+    chart.innerHTML = '';
+    labels.innerHTML = '';
+
+    months.forEach((m, i) => {
+      const col = document.createElement('div');
+      col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;';
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = Math.round((values[i] / max) * 96) + 'px';
+      bar.style.minHeight = '4px';
+      bar.title = formatCurrency(values[i]);
+      col.appendChild(bar);
+      chart.appendChild(col);
+      const lbl = document.createElement('span');
+      lbl.textContent = m;
+      lbl.style.cssText = 'flex:1;text-align:center;font-size:0.68rem;color:var(--gray);';
+      labels.appendChild(lbl);
     });
+  }
+
+  // Close modal on overlay click
+  document.getElementById('listingModal').addEventListener('click', function(e) {
+    if (e.target === this) closeListingModal();
   });
 
-  // Quick buttons feedback
-  document.querySelectorAll('.quick-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const orig = this.innerHTML;
-      this.innerHTML = '✓ Done!';
-      this.style.background = 'var(--green-primary)';
-      this.style.color = 'white';
-      setTimeout(() => { this.innerHTML = orig; this.style.background = ''; this.style.color = ''; }, 1400);
+  // Navigate to page
+  function navigateTo(page) {
+    window.location.href = page;
+  }
+
+  // Show coming soon message
+  function comingSoon(feature) {
+    showNotification(feature + ' coming soon!', 'info');
+  }
+
+  // Sidebar navigation
+  function setupSidebar() {
+    const menuItems = document.querySelectorAll('.sidebar-menu-item');
+    menuItems.forEach(item => {
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function(e) {
+        // Check if there's a link inside
+        const link = this.querySelector('a');
+        if (link && !e.target.matches('a')) {
+          // Don't do anything, let the link handle it
+          return;
+        }
+
+        // Update active state
+        menuItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+
+        // Get menu text
+        const text = this.textContent.trim().toLowerCase();
+
+        if (text.includes('dashboard')) {
+          // Already on dashboard
+        } else if (text.includes('my listings')) {
+          openListingModal();
+        } else if (text.includes('orders')) {
+          document.getElementById('ordersList').scrollIntoView({ behavior: 'smooth' });
+        } else if (text.includes('earnings')) {
+          comingSoon('Earnings dashboard');
+        } else if (text.includes('price tracker')) {
+          comingSoon('Price tracker');
+        } else if (text.includes('traceability')) {
+          comingSoon('Traceability');
+        } else if (text.includes('gov')) {
+          comingSoon('Government schemes');
+        } else if (text.includes('settings')) {
+          comingSoon('Settings');
+        }
+      });
     });
+  }
+
+  // Setup quick action buttons
+  function setupQuickActions() {
+    const buttons = document.querySelectorAll('.quick-btn');
+    buttons.forEach(btn => {
+      const text = btn.textContent.trim().toLowerCase();
+
+      btn.onclick = function() {
+        if (text.includes('add new listing')) {
+          openListingModal();
+        } else if (text.includes('manage orders')) {
+          document.getElementById('ordersList').scrollIntoView({ behavior: 'smooth' });
+        } else if (text.includes('withdraw')) {
+          comingSoon('Withdraw earnings');
+        } else if (text.includes('track')) {
+          comingSoon('Delivery tracking');
+        } else if (text.includes('market prices')) {
+          comingSoon('Market prices');
+        }
+      };
+    });
+  }
+
+  // Check authentication
+  function checkAuth() {
+    const token = getAuthToken();
+    if (!token) {
+      window.location.href = 'auth.html';
+      return false;
+    }
+    return true;
+  }
+
+  // Initialize dashboard
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in
+    if (!checkAuth()) return;
+
+    // Setup UI
+    setGreeting();
+    buildChart();
+    setupSidebar();
+    setupQuickActions();
+
+    // Load user info from auth.js
+    if (window.KrishiAuth && KrishiAuth.loadUserInfo) {
+      KrishiAuth.loadUserInfo();
+    }
+
+    // Load all data from API
+    loadStats();
+    loadListings();
+    loadOrders();
+    loadNotifications();
   });
 </script>
 </body>

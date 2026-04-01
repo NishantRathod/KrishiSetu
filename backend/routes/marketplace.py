@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.product import Product
 from database import Database
+from bson import ObjectId
+from datetime import datetime
 
 marketplace_bp = Blueprint('marketplace', __name__)
 
@@ -126,3 +128,77 @@ def get_my_products():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@marketplace_bp.route('/products/<product_id>', methods=['PUT'])
+@jwt_required()
+def update_product(product_id):
+    """Update a product"""
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        db = Database.get_db()
+
+        # Check if product exists and belongs to user
+        product = Product.find_by_id(product_id)
+        if not product:
+            return jsonify({'error': 'Product not found'}), 404
+
+        if product['seller_id'] != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+
+        # Update allowed fields
+        update_data = {}
+        if 'title' in data:
+            update_data['title'] = data['title']
+        if 'description' in data:
+            update_data['description'] = data['description']
+        if 'price' in data:
+            update_data['price'] = float(data['price'])
+        if 'quantity' in data:
+            update_data['quantity'] = float(data['quantity'])
+        if 'unit' in data:
+            update_data['unit'] = data['unit']
+        if 'category' in data:
+            update_data['category'] = data['category']
+        if 'status' in data:
+            update_data['status'] = data['status']
+
+        if update_data:
+            update_data['updated_at'] = datetime.utcnow()
+            db.products.update_one(
+                {'_id': ObjectId(product_id)},
+                {'$set': update_data}
+            )
+            return jsonify({'message': 'Product updated successfully'}), 200
+        else:
+            return jsonify({'error': 'No data to update'}), 400
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@marketplace_bp.route('/products/<product_id>', methods=['DELETE'])
+@jwt_required()
+def delete_product(product_id):
+    """Delete a product"""
+    try:
+        user_id = get_jwt_identity()
+        db = Database.get_db()
+
+        # Check if product exists and belongs to user
+        product = Product.find_by_id(product_id)
+        if not product:
+            return jsonify({'error': 'Product not found'}), 404
+
+        if product['seller_id'] != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+
+        # Delete the product
+        db.products.delete_one({'_id': ObjectId(product_id)})
+
+        return jsonify({'message': 'Product deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+

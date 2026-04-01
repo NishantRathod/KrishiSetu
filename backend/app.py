@@ -20,11 +20,15 @@ def create_app(config_name='default'):
     from routes.crops import crops_bp
     from routes.marketplace import marketplace_bp
     from routes.users import users_bp
+    from routes.dashboard import dashboard_bp
+    from routes.orders import orders_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(crops_bp, url_prefix='/api/crops')
     app.register_blueprint(marketplace_bp, url_prefix='/api/marketplace')
     app.register_blueprint(users_bp, url_prefix='/api/users')
+    app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
+    app.register_blueprint(orders_bp, url_prefix='/api/orders')
 
     # Root route
     @app.route('/')
@@ -37,7 +41,9 @@ def create_app(config_name='default'):
                 'auth': '/api/auth',
                 'crops': '/api/crops',
                 'marketplace': '/api/marketplace',
-                'users': '/api/users'
+                'users': '/api/users',
+                'dashboard': '/api/dashboard',
+                'orders': '/api/orders'
             }
         })
 
