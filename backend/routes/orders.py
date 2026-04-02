@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from models.order import Order
 from database import Database
 from bson import ObjectId
@@ -15,10 +15,15 @@ def get_orders():
     """Get all orders for current user (as buyer or seller)"""
     try:
         user_id = get_jwt_identity()
-        role = request.args.get('role', 'seller')  # seller or buyer
+        claims = get_jwt()
+        user_role = claims.get('role', 'farmer')
         db = Database.get_db()
 
-        if role == 'buyer':
+        # Determine if user is seeing orders as buyer or seller
+        # Consumers see their purchases, others see their sales
+        is_buyer = (user_role == 'consumer')
+
+        if is_buyer:
             orders = Order.find_by_buyer(user_id)
         else:
             orders = Order.find_by_seller(user_id)
@@ -26,7 +31,7 @@ def get_orders():
         orders_list = []
         for order in orders:
             product = db.products.find_one({'_id': ObjectId(order['product_id'])})
-            other_user_id = order['buyer_id'] if role == 'seller' else order['seller_id']
+            other_user_id = order['buyer_id'] if not is_buyer else order['seller_id']
             other_user = db.users.find_one({'_id': ObjectId(other_user_id)})
 
             orders_list.append({

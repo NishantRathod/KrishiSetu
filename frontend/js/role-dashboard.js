@@ -1,4 +1,82 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+// API_BASE_URL is defined by auth.js (loaded before this script).
+// Fallback in case this file is loaded standalone.
+if (typeof API_BASE_URL === 'undefined') {
+  window.API_BASE_URL = 'http://localhost:5000/api';
+}
+
+// Define permissions for each role
+const ROLE_PERMISSIONS = {
+  farmer: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: false
+  },
+  fpo: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: false
+  },
+  shg: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: false
+  },
+  processor: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: false
+  },
+  consumer: {
+    canCreateProduct: false,
+    canEditProduct: false,
+    canDeleteProduct: false,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: false,
+    canViewListings: false,
+    canViewOrders: true,
+    canViewPurchaseHistory: true
+  },
+  startup: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: false
+  },
+  admin: {
+    canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
+    canBrowseMarketplace: true,
+    canUpdateOrderStatus: true,
+    canViewListings: true,
+    canViewOrders: true,
+    canViewPurchaseHistory: true
+  }
+};
 
 const ROLE_CONFIG = {
   farmer: {
@@ -7,10 +85,12 @@ const ROLE_CONFIG = {
     welcome: 'Ready to sell today\'s harvest?',
     orderView: 'seller',
     showListings: true,
+    icon: '🌾',
+    permissions: ROLE_PERMISSIONS.farmer,
     quickActions: [
-      { key: 'add-listing', label: 'Add Crop Listing' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-marketplace', label: 'Open Marketplace' }
+      { key: 'add-listing', label: 'Add Crop Listing', permission: 'canCreateProduct' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-marketplace', label: 'Open Marketplace', permission: 'canBrowseMarketplace' }
     ]
   },
   fpo: {
@@ -19,10 +99,12 @@ const ROLE_CONFIG = {
     welcome: 'Keep your producer network efficient and profitable.',
     orderView: 'seller',
     showListings: true,
+    icon: '👥',
+    permissions: ROLE_PERMISSIONS.fpo,
     quickActions: [
-      { key: 'add-listing', label: 'Add Bulk Listing' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-marketplace', label: 'Open Marketplace' }
+      { key: 'add-listing', label: 'Add Bulk Listing', permission: 'canCreateProduct' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-marketplace', label: 'Open Marketplace', permission: 'canBrowseMarketplace' }
     ]
   },
   shg: {
@@ -31,10 +113,12 @@ const ROLE_CONFIG = {
     welcome: 'Strengthen your group with better market visibility.',
     orderView: 'seller',
     showListings: true,
+    icon: '🏘️',
+    permissions: ROLE_PERMISSIONS.shg,
     quickActions: [
-      { key: 'add-listing', label: 'Upload SHG Product' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-marketplace', label: 'Open Marketplace' }
+      { key: 'add-listing', label: 'Upload SHG Product', permission: 'canCreateProduct' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-marketplace', label: 'Open Marketplace', permission: 'canBrowseMarketplace' }
     ]
   },
   processor: {
@@ -43,10 +127,12 @@ const ROLE_CONFIG = {
     welcome: 'Your processing pipeline is ready for optimization.',
     orderView: 'seller',
     showListings: true,
+    icon: '🏭',
+    permissions: ROLE_PERMISSIONS.processor,
     quickActions: [
-      { key: 'add-listing', label: 'Create Procurement Listing' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-marketplace', label: 'Open Marketplace' }
+      { key: 'add-listing', label: 'Create Procurement Listing', permission: 'canCreateProduct' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-marketplace', label: 'Open Marketplace', permission: 'canBrowseMarketplace' }
     ]
   },
   consumer: {
@@ -55,10 +141,12 @@ const ROLE_CONFIG = {
     welcome: 'Healthy millet choices are one click away.',
     orderView: 'buyer',
     showListings: false,
+    icon: '🛒',
+    permissions: ROLE_PERMISSIONS.consumer,
     quickActions: [
-      { key: 'go-marketplace', label: 'Browse Marketplace' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-profile', label: 'Open Profile' }
+      { key: 'go-marketplace', label: 'Browse Marketplace', permission: 'canBrowseMarketplace' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-profile', label: 'Open Profile', permission: null }
     ]
   },
   startup: {
@@ -67,10 +155,12 @@ const ROLE_CONFIG = {
     welcome: 'Build your next agri innovation with live ecosystem data.',
     orderView: 'seller',
     showListings: true,
+    icon: '🚀',
+    permissions: ROLE_PERMISSIONS.startup,
     quickActions: [
-      { key: 'add-listing', label: 'Add Pilot Product' },
-      { key: 'refresh-data', label: 'Refresh Dashboard' },
-      { key: 'go-marketplace', label: 'Open Marketplace' }
+      { key: 'add-listing', label: 'Add Pilot Product', permission: 'canCreateProduct' },
+      { key: 'refresh-data', label: 'Refresh Dashboard', permission: null },
+      { key: 'go-marketplace', label: 'Open Marketplace', permission: 'canBrowseMarketplace' }
     ]
   }
 };
@@ -116,6 +206,20 @@ function statusBadge(status) {
   const cls = map[status] || 'pending';
   const label = String(status || '').replace('_', ' ');
   return `<span class="status-badge ${cls}">${label}</span>`;
+}
+
+// Permission checking functions
+function hasPermission(permission) {
+  const config = DASHBOARD_STATE.config;
+  if (!config.permissions) return true; // Fallback
+  return config.permissions[permission] === true;
+}
+
+function canPerformAction(actionKey) {
+  const config = DASHBOARD_STATE.config;
+  const action = config.quickActions.find(a => a.key === actionKey);
+  if (!action || !action.permission) return true;
+  return hasPermission(action.permission);
 }
 
 async function apiFetch(path, options = {}, requiresAuth = true) {
@@ -173,7 +277,13 @@ function renderDashboardHeader() {
   }
 
   if (actionsEl) {
-    actionsEl.innerHTML = config.quickActions
+    // Filter actions based on permissions
+    const allowedActions = config.quickActions.filter(action => {
+      if (!action.permission) return true; // No permission requirement
+      return hasPermission(action.permission);
+    });
+
+    actionsEl.innerHTML = allowedActions
       .map((action) => `<button class="role-action-item" data-action="${action.key}">${action.label}</button>`)
       .join('');
   }
@@ -206,18 +316,15 @@ async function loadStats() {
         { label: 'Total Revenue', value: formatCurrency(stats.total_revenue) }
       ]);
     } else {
-      const result = await apiFetch('/orders/?role=buyer');
+      // Buyer view - use new dashboard/stats endpoint which returns buyer stats
+      const result = await apiFetch('/dashboard/stats');
       if (!result) return;
-      const orders = result.orders || [];
-      const pending = orders.filter((o) => ['pending', 'processing', 'in_transit'].includes(o.status)).length;
-      const delivered = orders.filter((o) => o.status === 'delivered').length;
-      const spent = orders.reduce((sum, order) => sum + Number(order.total_price || 0), 0);
-
+      const stats = result.stats || {};
       renderStatsCards([
-        { label: 'Total Orders', value: Number(orders.length).toLocaleString('en-IN') },
-        { label: 'Pending Deliveries', value: Number(pending).toLocaleString('en-IN') },
-        { label: 'Delivered Orders', value: Number(delivered).toLocaleString('en-IN') },
-        { label: 'Total Spend', value: formatCurrency(spent) }
+        { label: 'Total Orders', value: Number(stats.total_purchases || 0).toLocaleString('en-IN') },
+        { label: 'Pending Deliveries', value: Number(stats.pending_deliveries || 0).toLocaleString('en-IN') },
+        { label: 'Delivered Orders', value: Number(stats.delivered_orders || 0).toLocaleString('en-IN') },
+        { label: 'Total Spend', value: formatCurrency(stats.total_spent) }
       ]);
     }
   } catch (error) {
@@ -234,6 +341,9 @@ function renderListings(listings) {
     return;
   }
 
+  const canEdit = hasPermission('canEditProduct');
+  const canDelete = hasPermission('canDeleteProduct');
+
   listEl.innerHTML = listings
     .map((item) => `
       <div class="item-row">
@@ -244,8 +354,8 @@ function renderListings(listings) {
         <div class="item-side">
           <div class="item-price">${formatCurrency(item.price)}</div>
           <div class="item-actions">
-            <button class="mini-btn" data-edit-listing="${item.id}">Edit</button>
-            <button class="mini-btn danger" data-delete-listing="${item.id}">Delete</button>
+            ${canEdit ? `<button class="mini-btn" data-edit-listing="${item.id}">Edit</button>` : ''}
+            ${canDelete ? `<button class="mini-btn danger" data-delete-listing="${item.id}">Delete</button>` : ''}
           </div>
         </div>
       </div>
@@ -274,7 +384,7 @@ function renderOrders(orders) {
     return;
   }
 
-  const canUpdate = DASHBOARD_STATE.config.orderView === 'seller';
+  const canUpdate = hasPermission('canUpdateOrderStatus');
 
   listEl.innerHTML = orders
     .map((order) => `
@@ -297,8 +407,8 @@ function renderOrders(orders) {
 
 async function loadOrders() {
   try {
-    const roleQuery = DASHBOARD_STATE.config.orderView;
-    const result = await apiFetch(`/orders/?role=${roleQuery}`);
+    // Role is now determined by backend from JWT, no need to pass role parameter
+    const result = await apiFetch('/orders/');
     if (!result) return;
     DASHBOARD_STATE.orders = result.orders || [];
     renderOrders(DASHBOARD_STATE.orders);
@@ -376,7 +486,20 @@ function closeListingModal() {
 async function saveListing(event) {
   event.preventDefault();
 
+  // Check permission
   const listingId = document.getElementById('listingId').value;
+  const isEdit = !!listingId;
+
+  if (isEdit && !hasPermission('canEditProduct')) {
+    notify('You do not have permission to edit listings', 'error');
+    return;
+  }
+
+  if (!isEdit && !hasPermission('canCreateProduct')) {
+    notify('You do not have permission to create listings', 'error');
+    return;
+  }
+
   const payload = {
     title: document.getElementById('listingTitle').value.trim(),
     category: document.getElementById('listingCategory').value,
@@ -414,6 +537,12 @@ async function saveListing(event) {
 }
 
 async function deleteListing(listingId) {
+  // Check permission
+  if (!hasPermission('canDeleteProduct')) {
+    notify('You do not have permission to delete listings', 'error');
+    return;
+  }
+
   if (!confirm('Delete this listing?')) return;
 
   try {
@@ -426,6 +555,12 @@ async function deleteListing(listingId) {
 }
 
 async function advanceOrderStatus(orderId) {
+  // Check permission
+  if (!hasPermission('canUpdateOrderStatus')) {
+    notify('You do not have permission to update order status', 'error');
+    return;
+  }
+
   const order = DASHBOARD_STATE.orders.find((item) => item.id === orderId);
   if (!order) return;
 
@@ -454,6 +589,12 @@ async function advanceOrderStatus(orderId) {
 }
 
 async function buyProduct(productId) {
+  // Check permission - only consumers/buyers can purchase
+  if (!hasPermission('canBrowseMarketplace')) {
+    notify('You do not have permission to buy products', 'error');
+    return;
+  }
+
   const qtyInput = document.querySelector(`[data-buy-qty="${productId}"]`);
   const quantity = Number(qtyInput ? qtyInput.value : 1);
 
@@ -475,7 +616,12 @@ async function buyProduct(productId) {
 }
 
 function handleQuickAction(actionKey) {
+  // Check permissions before executing action
   if (actionKey === 'add-listing') {
+    if (!hasPermission('canCreateProduct')) {
+      notify('You do not have permission to create listings', 'error');
+      return;
+    }
     openListingModal();
     return;
   }
@@ -486,6 +632,10 @@ function handleQuickAction(actionKey) {
   }
 
   if (actionKey === 'go-marketplace') {
+    if (!hasPermission('canBrowseMarketplace')) {
+      notify('You do not have permission to browse marketplace', 'error');
+      return;
+    }
     window.location.href = 'marketplace.html';
     return;
   }
