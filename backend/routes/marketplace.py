@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from models.product import Product
 from database import Database
 from bson import ObjectId
@@ -43,10 +43,17 @@ def get_products():
 @marketplace_bp.route('/products', methods=['POST'])
 @jwt_required()
 def add_product():
-    """Add a new product to marketplace"""
+    """Add a new product to marketplace (seller roles only)"""
     try:
         user_id = get_jwt_identity()
+        claims = get_jwt()
+        user_role = claims.get('role', 'farmer')
         data = request.get_json()
+
+        # Only seller-type roles can add products
+        seller_roles = ['farmer', 'fpo', 'shg', 'processor', 'startup', 'admin']
+        if user_role not in seller_roles:
+            return jsonify({'error': 'Only sellers can add products. Consumer role cannot list products'}), 403
 
         # Validate required fields
         required_fields = ['title', 'description', 'price', 'category', 'quantity', 'unit']
@@ -106,9 +113,17 @@ def get_product(product_id):
 @marketplace_bp.route('/my-products', methods=['GET'])
 @jwt_required()
 def get_my_products():
-    """Get all products listed by current user"""
+    """Get all products listed by current user (seller roles only)"""
     try:
         user_id = get_jwt_identity()
+        claims = get_jwt()
+        user_role = claims.get('role', 'farmer')
+
+        # Only seller-type roles can have product listings
+        seller_roles = ['farmer', 'fpo', 'shg', 'processor', 'startup', 'admin']
+        if user_role not in seller_roles:
+            return jsonify({'error': 'Only sellers can view product listings. Consumer role cannot list products'}), 403
+
         products = Product.find_by_seller(user_id)
 
         products_list = []
@@ -133,11 +148,18 @@ def get_my_products():
 @marketplace_bp.route('/products/<product_id>', methods=['PUT'])
 @jwt_required()
 def update_product(product_id):
-    """Update a product"""
+    """Update a product (seller roles only)"""
     try:
         user_id = get_jwt_identity()
+        claims = get_jwt()
+        user_role = claims.get('role', 'farmer')
         data = request.get_json()
         db = Database.get_db()
+
+        # Only seller-type roles can update products
+        seller_roles = ['farmer', 'fpo', 'shg', 'processor', 'startup', 'admin']
+        if user_role not in seller_roles:
+            return jsonify({'error': 'Only sellers can update products'}), 403
 
         # Check if product exists and belongs to user
         product = Product.find_by_id(product_id)
@@ -181,10 +203,17 @@ def update_product(product_id):
 @marketplace_bp.route('/products/<product_id>', methods=['DELETE'])
 @jwt_required()
 def delete_product(product_id):
-    """Delete a product"""
+    """Delete a product (seller roles only)"""
     try:
         user_id = get_jwt_identity()
+        claims = get_jwt()
+        user_role = claims.get('role', 'farmer')
         db = Database.get_db()
+
+        # Only seller-type roles can delete products
+        seller_roles = ['farmer', 'fpo', 'shg', 'processor', 'startup', 'admin']
+        if user_role not in seller_roles:
+            return jsonify({'error': 'Only sellers can delete products'}), 403
 
         # Check if product exists and belongs to user
         product = Product.find_by_id(product_id)

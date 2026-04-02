@@ -4,6 +4,9 @@ from bson import ObjectId
 import bcrypt
 import re
 
+# Valid roles in the system
+VALID_ROLES = ['farmer', 'fpo', 'shg', 'processor', 'consumer', 'startup', 'admin']
+
 class User:
     """User model"""
 
@@ -12,7 +15,12 @@ class User:
         self.email = email.strip().lower() if isinstance(email, str) else email
         self.password = self._hash_password(password)
         self.phone = phone
+
+        # Validate role
+        if role not in VALID_ROLES:
+            raise ValueError(f'Invalid role. Must be one of: {", ".join(VALID_ROLES)}')
         self.role = role
+
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
 

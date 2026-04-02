@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Role System Test</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+    .test-box { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #2196F3; }
+    .success { border-left-color: #4CAF50; }
+    .error { border-left-color: #f44336; }
+    .warning { border-left-color: #ff9800; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 4px; }
+    .btn-test { background: #2196F3; color: white; }
+    .btn-test:hover { background: #0b7dda; }
+    .result { margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 4px; font-family: monospace; }
+    h1 { color: #333; }
+    h2 { color: #666; margin-top: 20px; }
+    .role-test { display: inline-block; margin: 10px 10px 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>🧪 KrishiSetu Role System Test</h1>
+
+  <div class="test-box">
+    <h2>1. Test Login with Farmer Role</h2>
+    <div class="role-test">
+      <button class="btn-test" onclick="testFarmerLogin()">Login as Farmer</button>
+      (farmer@test.com / password123)
+    </div>
+    <div id="farmerResult" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-box">
+    <h2>2. Test Login with Startup Role</h2>
+    <div class="role-test">
+      <button class="btn-test" onclick="testStartupLogin()">Login as Startup</button>
+      (startup@test.com / password123)
+    </div>
+    <div id="startupResult" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-box">
+    <h2>3. Check Current Token</h2>
+    <button class="btn-test" onclick="checkToken()">Decode Token</button>
+    <div id="tokenResult" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-box">
+    <h2>4. Check User Data in LocalStorage</h2>
+    <button class="btn-test" onclick="checkLocalStorage()">Check Storage</button>
+    <div id="storageResult" class="result" style="display:none;"></div>
+  </div>
+
+  <div class="test-box">
+    <h2>5. Simulate Dashboard Load</h2>
+    <button class="btn-test" onclick="checkRoleConfig()">Check Role Config</button>
+    <div id="roleConfigResult" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:5000/api';
+
+    function decodeJWT(token) {
+      try {
+        const parts = token.split('.');
+        const payload = JSON.parse(atob(parts[1]));
+        return payload;
+      } catch (e) {
+        return { error: 'Failed to decode: ' + e.message };
+      }
+    }
+
+    async function testFarmerLogin() {
+      const result = document.getElementById('farmerResult');
+      result.style.display = 'block';
+      result.innerHTML = '⏳ Logging in...';
+
+      try {
+        const response = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: 'farmer@test.com', password: 'password123' })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('authToken', data.access_token);
+          localStorage.setItem('userData', JSON.stringify(data.user));
+
+          const decoded = decodeJWT(data.access_token);
+          result.className = 'result success';
+          result.innerHTML = `
+            <strong>✓ Farmer Login Successful!</strong><br>
+            User: ${data.user.name}<br>
+            Role: ${data.user.role}<br>
+            Token Role: ${decoded.role}<br>
+            <br>
+            <strong>Expected:</strong> Redirect to dashboard-farmer.html with GREEN theme<br>
+            <a href="dashboard-farmer.html" style="color: #2196F3;">→ Go to Farmer Dashboard</a>
+          `;
+        } else {
+          result.className = 'result error';
+          result.innerHTML = `<strong>✗ Login Failed:</strong> ${data.error}`;
+        }
+      } catch (e) {
+        result.className = 'result error';
+        result.innerHTML = `<strong>✗ Error:</strong> ${e.message}`;
+      }
+    }
+
+    async function testStartupLogin() {
+      const result = document.getElementById('startupResult');
+      result.style.display = 'block';
+      result.innerHTML = '⏳ Logging in...';
+
+      try {
+        const response = await fetch(`${API}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: 'startup@test.com', password: 'password123' })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('authToken', data.access_token);
+          localStorage.setItem('userData', JSON.stringify(data.user));
+
+          const decoded = decodeJWT(data.access_token);
+          result.className = 'result success';
+          result.innerHTML = `
+            <strong>✓ Startup Login Successful!</strong><br>
+            User: ${data.user.name}<br>
+            Role: ${data.user.role}<br>
+            Token Role: ${decoded.role}<br>
+            <br>
+            <strong>Expected:</strong> Redirect to dashboard-startup.html with TEAL/CYAN theme<br>
+            <a href="dashboard-startup.html" style="color: #00796B;">→ Go to Startup Dashboard</a>
+          `;
+        } else {
+          result.className = 'result error';
+          result.innerHTML = `<strong>✗ Login Failed:</strong> ${data.error}`;
+        }
+      } catch (e) {
+        result.className = 'result error';
+        result.innerHTML = `<strong>✗ Error:</strong> ${e.message}`;
+      }
+    }
+
+    function checkToken() {
+      const result = document.getElementById('tokenResult');
+      result.style.display = 'block';
+
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        result.className = 'result warning';
+        result.innerHTML = 'No token in localStorage. Please login first.';
+        return;
+      }
+
+      const decoded = decodeJWT(token);
+      result.className = 'result success';
+      result.innerHTML = `
+        <strong>Token Found!</strong><br><br>
+        <strong>Role in JWT:</strong> ${decoded.role || 'NOT FOUND'}<br>
+        <strong>User ID:</strong> ${decoded.sub}<br>
+        <strong>Expires:</strong> ${new Date(decoded.exp * 1000).toLocaleString()}<br>
+        <br>
+        <strong>Full Payload:</strong><br>
+        <pre>${JSON.stringify(decoded, null, 2)}</pre>
+      `;
+    }
+
+    function checkLocalStorage() {
+      const result = document.getElementById('storageResult');
+      result.style.display = 'block';
+
+      const userData = localStorage.getItem('userData');
+      if (!userData) {
+        result.className = 'result warning';
+        result.innerHTML = 'No userData in localStorage. Please login first.';
+        return;
+      }
+
+      const data = JSON.parse(userData);
+      result.className = 'result success';
+      result.innerHTML = `
+        <strong>User Data in Storage:</strong><br><br>
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+        <br>
+        <strong>Role should be:</strong> ${data.role}
+      `;
+    }
+
+    function checkRoleConfig() {
+      const result = document.getElementById('roleConfigResult');
+      result.style.display = 'block';
+
+      // Check if role-dashboard.js is loaded
+      if (!window.ROLE_CONFIG) {
+        result.className = 'result error';
+        result.innerHTML = `
+          <strong>✗ ROLE_CONFIG not found!</strong><br>
+          The role-dashboard.js script hasn't been loaded yet.<br>
+          Try going to a dashboard page first, then come back to this test.
+        `;
+        return;
+      }
+
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const userRole = userData.role || 'farmer';
+      const config = window.ROLE_CONFIG[userRole];
+
+      if (!config) {
+        result.className = 'result error';
+        result.innerHTML = `<strong>✗ No config for role:</strong> ${userRole}`;
+        return;
+      }
+
+      result.className = 'result success';
+      result.innerHTML = `
+        <strong>✓ Role Config Found for: ${userRole}</strong><br><br>
+        <strong>Title:</strong> ${config.title}<br>
+        <strong>Subtitle:</strong> ${config.subtitle}<br>
+        <strong>Welcome:</strong> ${config.welcome}<br>
+        <strong>Theme Color:</strong> ${config.icon}<br>
+        <strong>Show Listings:</strong> ${config.showListings}<br>
+        <strong>Order View:</strong> ${config.orderView}<br>
+        <br>
+        <strong>Permissions:</strong><br>
+        <pre>${JSON.stringify(config.permissions, null, 2)}</pre>
+      `;
+    }
+  </script>
+</body>
+</html>
