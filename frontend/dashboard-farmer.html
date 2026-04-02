@@ -1,252 +1,207 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Farmer Profile - KrishiSetu</title>
-
+  <title>Farmer Dashboard - KrishiSetu</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-
   <style>
     :root {
-      --primary:#2E7D32;
-      --light:#F1F8E9;
-      --accent:#81C784;
-      --bg:#f7fbf7;
-      --text:#1e293b;
-      --muted:#64748b;
+      --primary:#2E7D32; --primary-light:#43A047; --bg:#f7fbf7;
+      --light:#F1F8E9; --accent:#81C784; --text:#1e293b; --muted:#64748b;
+      --white:#fff; --shadow:0 2px 12px rgba(46,125,50,0.08);
     }
-
-    body {
-      margin:0;
-      font-family:'Inter',sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
-
-    /* NAV */
-    .navbar {
-      display:flex;
-      justify-content:space-between;
-      padding:14px 20px;
-      background:white;
-      box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .logo {
-      font-weight:800;
-      color:var(--primary);
-    }
-
-    .nav-actions a {
-      margin-left:10px;
-      text-decoration:none;
-      padding:8px 12px;
-      border-radius:8px;
-      background:#f1f5f9;
-      font-size:0.85rem;
-    }
-
-    /* MAIN */
-    .container {
-      max-width:1100px;
-      margin:30px auto;
-      padding:20px;
-    }
-
-    .card {
-      background:rgba(255,255,255,0.85);
-      backdrop-filter:blur(10px);
-      border-radius:18px;
-      padding:24px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    }
-
-    /* HEADER */
-    .header {
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .title {
-      font-size:1.6rem;
-      font-weight:800;
-      color:var(--primary);
-    }
-
-    .btn {
-      padding:8px 12px;
-      border-radius:8px;
-      border:1px solid #ddd;
-      cursor:pointer;
-    }
-
-    .btn:hover {
-      background:var(--primary);
-      color:white;
-    }
-
-    /* STATS */
-    .stats {
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:14px;
-      margin-top:20px;
-    }
-
-    .stat {
-      background:white;
-      padding:14px;
-      border-radius:12px;
-      text-align:center;
-      box-shadow:0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    .stat h3 {
-      margin:0;
-      color:var(--primary);
-    }
-
-    /* GRID */
-    .grid {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      margin-top:20px;
-    }
-
-    .section {
-      background:white;
-      padding:16px;
-      border-radius:14px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    .section h3 {
-      margin-bottom:10px;
-      color:var(--primary);
-    }
-
-    .item {
-      margin-bottom:10px;
-    }
-
-    .label {
-      font-size:0.75rem;
-      color:var(--muted);
-    }
-
-    .value {
-      font-weight:600;
-    }
-
-    /* RESPONSIVE */
-    @media(max-width:900px){
-      .grid { grid-template-columns:1fr; }
-      .stats { grid-template-columns:1fr 1fr; }
-    }
-
-    @media(max-width:600px){
-      .stats { grid-template-columns:1fr; }
-    }
-
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+    .navbar{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:var(--white);box-shadow:var(--shadow);position:sticky;top:0;z-index:100;}
+    .logo{font-weight:800;font-size:1.1rem;color:var(--primary);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .nav-user{font-size:0.85rem;color:var(--muted);}
+    .nav-user strong{color:var(--text);}
+    .nav-link{text-decoration:none;padding:7px 14px;border-radius:8px;background:var(--light);color:var(--primary);font-size:0.82rem;font-weight:600;transition:all 0.2s;}
+    .nav-link:hover{background:var(--primary);color:var(--white);}
+    .nav-link.logout{background:#fee2e2;color:#c62828;}
+    .nav-link.logout:hover{background:#c62828;color:var(--white);}
+    .container{max-width:1100px;margin:0 auto;padding:24px 20px;}
+    .dash-header{background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:16px;padding:24px 28px;color:var(--white);margin-bottom:24px;}
+    .dash-header h1{font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+    .dash-header p{font-size:0.9rem;opacity:0.88;margin-bottom:2px;}
+    .dash-header .welcome{font-size:0.85rem;opacity:0.75;}
+    .actions-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+    .role-action-item{padding:9px 18px;border-radius:8px;border:1.5px solid var(--accent);background:var(--white);color:var(--primary);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+    .role-action-item:hover{background:var(--primary);color:var(--white);border-color:var(--primary);}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+    .stat-card{background:var(--white);border-radius:12px;padding:18px;box-shadow:var(--shadow);border-left:4px solid var(--accent);}
+    .stat-label{font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+    .stat-value{font-size:1.4rem;font-weight:800;color:var(--primary);}
+    .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+    .section-card{background:var(--white);border-radius:14px;padding:20px;box-shadow:var(--shadow);}
+    .section-title{font-size:0.95rem;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--light);}
+    .item-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--light);}
+    .item-row:last-child{border-bottom:none;}
+    .item-title{font-size:0.88rem;font-weight:600;color:var(--text);}
+    .item-meta{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+    .item-price{font-size:0.9rem;font-weight:700;color:var(--primary);}
+    .item-side{text-align:right;}
+    .item-actions{display:flex;gap:6px;margin-top:4px;justify-content:flex-end;}
+    .mini-btn{padding:4px 10px;border-radius:6px;border:none;font-size:0.72rem;font-weight:600;cursor:pointer;background:var(--light);color:var(--primary);}
+    .mini-btn.danger{background:#fee2e2;color:#c62828;}
+    .status-badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:0.72rem;font-weight:600;}
+    .status-badge.pending{background:#FFF8E1;color:#F57C00;}
+    .status-badge.processing{background:#E3F2FD;color:#1565C0;}
+    .status-badge.delivered{background:#E8F5E9;color:#2E7D32;}
+    .status-badge.cancelled{background:#FFEBEE;color:#C62828;}
+    .empty-text{text-align:center;padding:24px;color:var(--muted);font-size:0.85rem;}
+    .quick-facts{display:flex;gap:16px;flex-wrap:wrap;}
+    .fact-item{background:var(--light);padding:10px 14px;border-radius:8px;font-size:0.82rem;}
+    .market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+    .market-card{background:var(--light);border-radius:10px;padding:14px;}
+    .market-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+    .buy-box{display:flex;gap:6px;align-items:center;}
+    .buy-box input{width:56px;padding:4px 8px;border:1.5px solid var(--accent);border-radius:6px;font-size:0.82rem;}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;visibility:hidden;transition:all 0.3s;}
+    .modal-overlay.active{opacity:1;visibility:visible;}
+    .modal{background:var(--white);border-radius:14px;padding:28px;width:90%;max-width:480px;max-height:90vh;overflow-y:auto;}
+    .modal h3{margin-bottom:18px;color:var(--primary);}
+    .form-group{margin-bottom:14px;}
+    .form-group label{display:block;margin-bottom:5px;font-size:0.85rem;font-weight:600;color:var(--text);}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1.5px solid var(--accent);border-radius:8px;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);}
+    .form-group textarea{min-height:70px;resize:vertical;}
+    .form-row{display:flex;gap:12px;}
+    .form-row .form-group{flex:1;}
+    .modal-actions{display:flex;gap:10px;margin-top:18px;}
+    .modal-actions button{flex:1;padding:11px;border-radius:8px;border:none;font-weight:700;cursor:pointer;font-size:0.88rem;}
+    .btn-cancel{background:#f1f5f9;color:var(--text);}
+    .btn-submit{background:var(--primary);color:var(--white);}
+    .notification{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:10px;font-size:0.88rem;font-weight:600;z-index:9999;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);}
+    .notification-success{background:#E8F5E9;color:#2E7D32;border:1.5px solid #A5D6A7;}
+    .notification-error{background:#FFEBEE;color:#C62828;border:1.5px solid #EF9A9A;}
+    .notification-info{background:#E3F2FD;color:#1565C0;border:1.5px solid #90CAF9;}
+    .notification button{background:none;border:none;cursor:pointer;font-size:1rem;color:inherit;padding:0;}
+    @media(max-width:900px){.stats-grid{grid-template-columns:1fr 1fr;}.dash-grid{grid-template-columns:1fr;}}
+    @media(max-width:500px){.stats-grid{grid-template-columns:1fr;}}
   </style>
 </head>
+<body data-role="farmer">
 
-<body>
-
-  <!-- NAV -->
-  <div class="navbar">
-    <div class="logo">KrishiSetu</div>
-    <div class="nav-actions">
-      <a href="#">Dashboard</a>
-      <a href="#">Marketplace</a>
-      <a href="#">Logout</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">🌾 KrishiSetu</div>
+    <div class="nav-right">
+      <span class="nav-user">Signed in as <strong id="roleUserName">...</strong></span>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+      <a href="#" class="nav-link logout" data-logout>Logout</a>
     </div>
-  </div>
+  </nav>
 
-  <!-- MAIN -->
   <div class="container">
-    <div class="card">
 
-      <div class="header">
-        <div>
-          <div class="title">👨‍🌾 Nishant Rathod</div>
-          <div class="label">Registered Farmer</div>
+    <!-- DASHBOARD HEADER -->
+    <div class="dash-header">
+      <h1 id="roleTitle">Farmer Dashboard</h1>
+      <p id="roleSubtitle">Track crops, manage listings, and monitor mandi trends.</p>
+      <p class="welcome" id="roleWelcome">Ready to sell today's harvest?</p>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="actions-bar" id="roleActions"></div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-label">Monthly Revenue</div><div class="stat-value">—</div></div>
+      <div class="stat-card"><div class="stat-label">Active Listings</div><div class="stat-value">—</div></div>
+      <div class="stat-card"><div class="stat-label">Pending Orders</div><div class="stat-value">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value">—</div></div>
+    </div>
+
+    <!-- LISTINGS + ORDERS -->
+    <div class="dash-grid">
+
+      <!-- MY LISTINGS -->
+      <div id="listingsSection">
+        <div class="section-card">
+          <div class="section-title">🌾 My Listings</div>
+          <div id="listingsList"><div class="empty-text">Loading listings...</div></div>
         </div>
-        <button class="btn"><i class="ri-edit-line"></i> Edit Profile</button>
       </div>
 
-      <!-- STATS -->
-      <div class="stats">
-        <div class="stat">
-          <p>Land</p>
-          <h3>5 Acres</h3>
-        </div>
-        <div class="stat">
-          <p>Production</p>
-          <h3>20 Tons</h3>
-        </div>
-        <div class="stat">
-          <p>Orders</p>
-          <h3>40</h3>
-        </div>
-        <div class="stat">
-          <p>Income</p>
-          <h3>₹2L</h3>
-        </div>
-      </div>
-
-      <!-- DETAILS -->
-      <div class="grid">
-
-        <!-- PERSONAL -->
-        <div class="section">
-          <h3>👤 Personal Info</h3>
-          <div class="item"><div class="label">Phone</div><div class="value">+91 9876543210</div></div>
-          <div class="item"><div class="label">Email</div><div class="value">farmer@email.com</div></div>
-        </div>
-
-        <!-- LOCATION -->
-        <div class="section">
-          <h3>📍 Location</h3>
-          <div class="item"><div class="value">Nashik, Maharashtra</div></div>
-        </div>
-
-        <!-- CROPS -->
-        <div class="section">
-          <h3>🌾 Crops</h3>
-          <div class="item">Wheat</div>
-          <div class="item">Onion</div>
-          <div class="item">Millets</div>
-        </div>
-
-        <!-- LAND -->
-        <div class="section">
-          <h3>🚜 Land Details</h3>
-          <div class="item"><div class="label">Area</div><div class="value">5 Acres</div></div>
-          <div class="item"><div class="label">Soil</div><div class="value">Black Soil</div></div>
-        </div>
-
-        <!-- IRRIGATION -->
-        <div class="section">
-          <h3>💧 Irrigation</h3>
-          <div class="item">Drip Irrigation</div>
-        </div>
-
-        <!-- BUYERS -->
-        <div class="section">
-          <h3>🤝 Buyers</h3>
-          <div class="item">Local Market</div>
-          <div class="item">FPO Nashik</div>
-        </div>
-
+      <!-- ORDERS -->
+      <div class="section-card">
+        <div class="section-title">📦 Recent Orders</div>
+        <div id="ordersList"><div class="empty-text">Loading orders...</div></div>
       </div>
 
     </div>
+
+    <!-- MARKETPLACE PRODUCTS -->
+    <div class="section-card" style="margin-bottom:24px;">
+      <div class="section-title">🛒 Marketplace</div>
+      <div class="market-grid" id="marketList"><div class="empty-text">Loading products...</div></div>
+    </div>
+
+    <!-- ROLE-SPECIFIC SECTION -->
+    <div id="roleSpecificSection"></div>
+
   </div>
 
+  <!-- LISTING MODAL -->
+  <div class="modal-overlay" id="listingModal">
+    <div class="modal">
+      <h3>Add / Edit Listing</h3>
+      <form id="listingForm">
+        <input type="hidden" id="listingId">
+        <div class="form-group">
+          <label>Product Title *</label>
+          <input type="text" id="listingTitle" placeholder="e.g., Finger Millet (Ragi)" required>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="listingCategory" required>
+            <option value="">Select category</option>
+            <option value="millets">Millets</option>
+            <option value="grains">Grains</option>
+            <option value="pulses">Pulses</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+            <option value="spices">Spices</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="listingDescription" placeholder="Describe your product..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (₹) *</label>
+            <input type="number" id="listingPrice" placeholder="85" min="0" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Unit *</label>
+            <select id="listingUnit" required>
+              <option value="kg">per kg</option>
+              <option value="quintal">per quintal</option>
+              <option value="ton">per ton</option>
+              <option value="piece">per piece</option>
+              <option value="dozen">per dozen</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Available Quantity *</label>
+          <input type="number" id="listingQuantity" placeholder="100" min="0" step="0.1" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="closeListingModal">Cancel</button>
+          <button type="submit" class="btn-submit">Save Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/role-dashboard.js"></script>
 </body>
 </html>

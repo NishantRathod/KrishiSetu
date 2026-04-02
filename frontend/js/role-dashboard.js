@@ -1,4 +1,8 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+// API_BASE_URL is defined by auth.js (loaded before this script).
+// Fallback in case this file is loaded standalone.
+if (typeof API_BASE_URL === 'undefined') {
+  window.API_BASE_URL = 'http://localhost:5000/api';
+}
 
 // Define permissions for each role
 const ROLE_PERMISSIONS = {
