@@ -291,7 +291,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // If on dashboard/profile, protect page and load user info
-    if (window.location.pathname.includes('dashboard.html') || window.location.pathname.includes('profile.html')) {
+    const roleDashboards = ['dashboard.html', 'dashboard-farmer.html', 'dashboard-consumer.html',
+      'dashboard-fpo.html', 'dashboard-shg.html', 'dashboard-processor.html', 'dashboard-startup.html'];
+    const isOnDashboard = roleDashboards.some(d => window.location.pathname.includes(d))
+      || window.location.pathname.includes('profile.html');
+    if (isOnDashboard) {
         if (protectPage()) {
             loadUserInfo();
         }

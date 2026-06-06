@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from models.user import User
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
+from models.user import User, VALID_ROLES
 from database import Database
 
 auth_bp = Blueprint('auth', __name__)
@@ -16,10 +16,15 @@ def register():
 
         email = (data.get('email') or '').strip().lower()
         phone = (data.get('phone') or '').strip()
+        role = data.get('role', 'farmer')
 
         # Validate required fields
         if not data.get('name') or not email or not data.get('password'):
             return jsonify({'error': 'Name, email and password are required'}), 400
+
+        # Validate role
+        if role not in VALID_ROLES:
+            return jsonify({'error': f'Invalid role. Must be one of: {", ".join(VALID_ROLES)}'}), 400
 
         # Check if user already exists
         if User.find_by_email(email):
@@ -31,13 +36,16 @@ def register():
             email=email,
             password=data['password'],
             phone=phone,
-            role=data.get('role', 'farmer')
+            role=role
         )
 
         user_id = user.save()
 
-        # Create access token
-        access_token = create_access_token(identity=user_id)
+        # Create access token with role
+        access_token = create_access_token(
+            identity=user_id,
+            additional_claims={'role': user.role}
+        )
 
         return jsonify({
             'message': 'User registered successfully',
@@ -79,8 +87,11 @@ def login():
         if not User.verify_password(user['password'], password):
             return jsonify({'error': 'Invalid email or password'}), 401
 
-        # Create access token
-        access_token = create_access_token(identity=str(user['_id']))
+        # Create access token with role
+        access_token = create_access_token(
+            identity=str(user['_id']),
+            additional_claims={'role': user['role']}
+        )
 
         return jsonify({
             'message': 'Login successful',
