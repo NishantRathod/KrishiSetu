@@ -3,8 +3,6 @@
  * Handles login, registration, and JWT token management
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
-
 // Utility: Show notification
 function showNotification(message, type = 'info') {
     // Remove existing notifications

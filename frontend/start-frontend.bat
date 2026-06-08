@@ -6,6 +6,12 @@ echo.
 
 cd /d "%~dp0"
 
+REM Check if venv exists in parent directory
+if exist "..\\.venv\\Scripts\\python.exe" (
+    echo Activating virtual environment...
+    call ..\\.venv\\Scripts\\activate.bat
+)
+
 echo Starting Frontend Server...
 echo Frontend will run at: http://localhost:3000
 echo.

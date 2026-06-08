@@ -6,10 +6,12 @@ echo.
 
 cd /d "%~dp0"
 
-REM Check if venv exists
-if not exist "venv\" (
+REM Check if venv exists in parent directory
+if not exist "..\\.venv\" (
     echo Creating virtual environment...
-    python -m venv venv
+    cd ..
+    python -m venv .venv
+    cd backend
     if errorlevel 1 (
         echo ERROR: Failed to create virtual environment
         echo Make sure Python is installed and in PATH
@@ -20,9 +22,9 @@ if not exist "venv\" (
     echo.
 )
 
-REM Activate virtual environment
+REM Activate virtual environment from parent directory
 echo Activating virtual environment...
-call venv\Scripts\activate.bat
+call ..\\.venv\\Scripts\\activate.bat
 if errorlevel 1 (
     echo ERROR: Failed to activate virtual environment
     pause
