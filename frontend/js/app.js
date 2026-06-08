@@ -47,6 +47,48 @@
   });
 })();
 
+/* --- Auth-aware links (Dashboard/Profile) --- */
+(function () {
+  function integrateRoleLinks() {
+    if (!window.KrishiAuth || typeof window.KrishiAuth.isLoggedIn !== 'function') {
+      return false;
+    }
+
+    const isLoggedIn = window.KrishiAuth.isLoggedIn();
+    if (!isLoggedIn) return true;
+
+    const user = window.KrishiAuth.getUserData ? window.KrishiAuth.getUserData() : {};
+    const role = window.KrishiAuth.normalizeRole
+      ? window.KrishiAuth.normalizeRole(user?.role)
+      : String(user?.role || '').toLowerCase();
+    const dashboardPath = window.KrishiAuth.getRoleDashboardPath
+      ? window.KrishiAuth.getRoleDashboardPath(role)
+      : 'dashboard-farmer.html';
+
+    document.querySelectorAll('a[href="auth.html"], a[data-dashboard-link="true"]').forEach(link => {
+      if (link.classList.contains('btn-register')) {
+        link.href = 'profile.html';
+        if (link.textContent.trim().toLowerCase() === 'join free') {
+          link.textContent = 'Profile';
+        }
+      } else {
+        link.href = dashboardPath;
+        const text = link.textContent.trim().toLowerCase();
+        if (text === 'login' || text === 'dashboard') {
+          link.textContent = 'Dashboard';
+        }
+      }
+    });
+
+    return true;
+  }
+
+  if (!integrateRoleLinks()) {
+    document.addEventListener('DOMContentLoaded', integrateRoleLinks);
+    window.addEventListener('load', integrateRoleLinks);
+  }
+})();
+
 /* --- Scroll reveal (Intersection Observer) --- */
 (function () {
   const style = document.createElement('style');

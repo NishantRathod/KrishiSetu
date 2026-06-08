@@ -55,8 +55,24 @@ function isLoggedIn() {
     return !!getToken();
 }
 
+// Normalize role labels from UI/backend into supported route keys
+function normalizeRole(role) {
+    const value = String(role || '').trim().toLowerCase();
+    const aliasMap = {
+        'start up': 'startup',
+        'start-up': 'startup',
+        entrepreneur: 'startup',
+        buyer: 'consumer',
+        customer: 'consumer',
+        producer: 'farmer'
+    };
+
+    return aliasMap[value] || value;
+}
+
 // Map user role to its post-login dashboard
 function getRoleDashboardPath(role) {
+    const normalizedRole = normalizeRole(role);
     const roleMap = {
         farmer: 'dashboard-farmer.html',
         fpo: 'dashboard-fpo.html',
@@ -66,7 +82,7 @@ function getRoleDashboardPath(role) {
         startup: 'dashboard-startup.html'
     };
 
-    return roleMap[(role || '').toLowerCase()] || 'dashboard-farmer.html';
+    return roleMap[normalizedRole] || 'dashboard-farmer.html';
 }
 
 // Redirect user based on selected/assigned role
@@ -189,7 +205,7 @@ async function handleRegister(event) {
                 email,
                 password,
                 phone,
-                role
+                role: normalizeRole(role)
             })
         });
 
@@ -310,6 +326,7 @@ window.KrishiAuth = {
     handleLogout,
     isLoggedIn,
     getUserData,
+    normalizeRole,
     getRoleDashboardPath,
     redirectToRoleDashboard,
     protectPage,

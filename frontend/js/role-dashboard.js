@@ -496,62 +496,69 @@ function handleQuickAction(actionKey) {
 }
 
 function attachEvents() {
-  // Remove old listeners by cloning and replacing
   const actionsEl = document.getElementById('roleActions');
-  if (actionsEl) {
-    const newActionsEl = actionsEl.cloneNode(false);
-    actionsEl.parentNode.replaceChild(newActionsEl, actionsEl);
-    
-    setTimeout(() => {
-      const actionsBtns = document.getElementById('roleActions');
-      if (actionsBtns) {
-        actionsBtns.addEventListener('click', (event) => {
-          const button = event.target.closest('button[data-action]');
-          if (!button) return;
-          const action = button.getAttribute('data-action');
-          handleQuickAction(action);
-        });
-      }
-    }, 10);
+  if (actionsEl && !actionsEl.dataset.bound) {
+    actionsEl.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button) return;
+      const action = button.getAttribute('data-action');
+      handleQuickAction(action);
+    });
+    actionsEl.dataset.bound = '1';
   }
 
   const listingsEl = document.getElementById('listingsList');
-  if (listingsEl) {
+  if (listingsEl && !listingsEl.dataset.bound) {
     listingsEl.addEventListener('click', (event) => {
       const editBtn = event.target.closest('[data-edit-listing]');
       const delBtn = event.target.closest('[data-delete-listing]');
       if (editBtn) openListingModal(editBtn.dataset.editListing);
       if (delBtn) deleteListing(delBtn.dataset.deleteListing);
     });
+    listingsEl.dataset.bound = '1';
   }
 
   const ordersEl = document.getElementById('ordersList');
-  if (ordersEl) {
+  if (ordersEl && !ordersEl.dataset.bound) {
     ordersEl.addEventListener('click', (event) => {
       const btn = event.target.closest('[data-next-status]');
       if (btn) advanceOrderStatus(btn.dataset.nextStatus);
     });
+    ordersEl.dataset.bound = '1';
   }
 
   const marketEl = document.getElementById('marketList');
-  if (marketEl) {
+  if (marketEl && !marketEl.dataset.bound) {
     marketEl.addEventListener('click', (event) => {
       const btn = event.target.closest('[data-buy-product]');
       if (btn) buyProduct(btn.dataset.buyProduct);
     });
+    marketEl.dataset.bound = '1';
   }
 
   const refreshBtn = document.getElementById('refreshBtn');
-  if (refreshBtn) refreshBtn.addEventListener('click', loadAllData);
+  if (refreshBtn && !refreshBtn.dataset.bound) {
+    refreshBtn.addEventListener('click', loadAllData);
+    refreshBtn.dataset.bound = '1';
+  }
   
   const addBtn = document.getElementById('addListingBtn');
-  if (addBtn) addBtn.addEventListener('click', () => openListingModal());
+  if (addBtn && !addBtn.dataset.bound) {
+    addBtn.addEventListener('click', () => openListingModal());
+    addBtn.dataset.bound = '1';
+  }
   
   const closeModalBtn = document.getElementById('closeListingModal');
-  if (closeModalBtn) closeModalBtn.addEventListener('click', closeListingModal);
+  if (closeModalBtn && !closeModalBtn.dataset.bound) {
+    closeModalBtn.addEventListener('click', closeListingModal);
+    closeModalBtn.dataset.bound = '1';
+  }
   
   const listingForm = document.getElementById('listingForm');
-  if (listingForm) listingForm.addEventListener('submit', saveListing);
+  if (listingForm && !listingForm.dataset.bound) {
+    listingForm.addEventListener('submit', saveListing);
+    listingForm.dataset.bound = '1';
+  }
 }
 
 function renderRoleSpecificSection(role) {
@@ -630,9 +637,13 @@ function initRoleDashboard() {
     return;
   }
 
-  const expectedRole = (document.body.dataset.role || '').toLowerCase();
+  const normalizeRole = window.KrishiAuth.normalizeRole
+    ? window.KrishiAuth.normalizeRole
+    : (value) => String(value || '').trim().toLowerCase();
+
+  const expectedRole = normalizeRole(document.body.dataset.role || '');
   const user = window.KrishiAuth.getUserData() || {};
-  const actualRole = (user.role || '').toLowerCase();
+  const actualRole = normalizeRole(user.role || '');
 
   if (expectedRole && actualRole && expectedRole !== actualRole) {
     window.location.href = window.KrishiAuth.getRoleDashboardPath(actualRole);

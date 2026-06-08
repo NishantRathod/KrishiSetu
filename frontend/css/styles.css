@@ -610,6 +610,65 @@ section { padding: 90px 0; }
 .stakeholder-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
 /* ============================================================
+   ROLE QUICK LINKS
+   ============================================================ */
+.role-quick-links {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(249,168,37,0.12), transparent 28%),
+    radial-gradient(circle at 86% 86%, rgba(46,125,50,0.14), transparent 30%),
+    var(--off-white);
+}
+.role-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 44px;
+}
+.role-link-card {
+  background: var(--white);
+  border: 1.5px solid rgba(46,125,50,0.14);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.role-link-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(46,125,50,0.35);
+}
+.role-link-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #E8F5E9, #FFF8E1);
+  margin-bottom: 12px;
+}
+.role-link-card h4 {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+}
+.role-link-card p {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  min-height: 42px;
+}
+.role-link-open {
+  margin-top: 12px;
+  display: inline-block;
+  color: var(--green-primary);
+  font-size: 0.83rem;
+  font-weight: 700;
+}
+
+/* ============================================================
    HOW IT WORKS
    ============================================================ */
 .how-it-works { background: linear-gradient(180deg, var(--off-white) 0%, var(--green-bg) 100%); }
@@ -949,7 +1008,7 @@ footer {
 .filter-option .count { margin-left: auto; font-size: 0.75rem; color: var(--gray); }
 .range-slider { width: 100%; accent-color: var(--green-primary); }
 .range-values { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
-.mp-main {}
+
 .mp-toolbar {
   display: flex;
   align-items: center;
@@ -1243,6 +1302,7 @@ footer {
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .stakeholders-grid { grid-template-columns: repeat(3, 1fr); }
+  .role-links-grid { grid-template-columns: repeat(2, 1fr); }
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .dashboard-layout { grid-template-columns: 1fr; }
@@ -1256,6 +1316,7 @@ footer {
   .hero-title { font-size: 2rem; }
   .features-grid { grid-template-columns: 1fr; }
   .stakeholders-grid { grid-template-columns: repeat(2, 1fr); }
+  .role-links-grid { grid-template-columns: 1fr; }
   .products-grid { grid-template-columns: 1fr; }
   .products-grid-mp { grid-template-columns: repeat(2, 1fr); }
   .marketplace-layout { grid-template-columns: 1fr; }
