@@ -1,4 +1,12 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const ROLE_DASHBOARD_API_BASE_URL =
+  window.API_BASE_URL ||
+  window.KRISHISETU_API_URL ||
+  (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:5000/api'
+      : 'https://krishisetu-backend.onrender.com/api'
+  );
 
 const ROLE_CONFIG = {
   farmer: {
@@ -131,7 +139,7 @@ async function apiFetch(path, options = {}, requiresAuth = true) {
     }
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${ROLE_DASHBOARD_API_BASE_URL}${path}`, {
     ...options,
     headers
   });

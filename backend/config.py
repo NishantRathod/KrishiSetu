@@ -10,6 +10,14 @@ class Config:
     MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/krishisetu')
     DEBUG = os.getenv('DEBUG', 'True') == 'True'
     PORT = int(os.getenv('PORT', 5000))
+    CORS_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv(
+            'CORS_ORIGINS',
+            'http://localhost:3000,http://localhost:5000,http://127.0.0.1:5000'
+        ).split(',')
+        if origin.strip()
+    ]
 
 class DevelopmentConfig(Config):
     """Development configuration"""

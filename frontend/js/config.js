@@ -12,23 +12,25 @@ function getApiBaseUrl() {
   
   // Production: Check for environment variable or use deployed backend URL
   // This can be set via Netlify environment variables
-  if (typeof KRISHISETU_API_URL !== 'undefined') {
-    return KRISHISETU_API_URL;
+  if (window.KRISHISETU_API_URL) {
+    return window.KRISHISETU_API_URL.replace(/\/$/, '');
   }
   
   // Get from localStorage if user has set it
   const storedUrl = localStorage.getItem('api_base_url');
   if (storedUrl) {
-    return storedUrl;
+    return storedUrl.replace(/\/$/, '');
   }
-  
-  // Default to current domain (assumes backend is on same domain)
-  // For Netlify with separate backend, update this or set KRISHISETU_API_URL environment variable
-  return `${window.location.origin}/api`;
+
+  // Default Render backend created from render.yaml.
+  // If Render gives you a different service URL, run:
+  // localStorage.setItem('api_base_url', 'https://your-render-url.onrender.com/api')
+  return 'https://krishisetu-backend.onrender.com/api';
 }
 
 // Make it globally available
 const API_BASE_URL = getApiBaseUrl();
+window.API_BASE_URL = API_BASE_URL;
 
 // Function to update API URL at runtime if needed
 window.setApiBaseUrl = function(url) {

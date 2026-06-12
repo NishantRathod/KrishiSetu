@@ -16,7 +16,11 @@ def create_app(config_name='default'):
     app.config.from_object(config[config_name])
 
     # Initialize extensions
-    CORS(app)
+    CORS(
+        app,
+        resources={r"/api/*": {"origins": app.config['CORS_ORIGINS']}},
+        supports_credentials=True
+    )
     jwt = JWTManager(app)
 
     # Register blueprints
