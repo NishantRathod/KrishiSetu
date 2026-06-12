@@ -166,13 +166,12 @@ async function handleRegister(event) {
     const firstName = (form.querySelector('input[name="firstName"]')?.value || '').trim();
     const lastName = (form.querySelector('input[name="lastName"]')?.value || '').trim();
     const email = (form.querySelector('input[name="email"]')?.value || '').trim();
-    const phone = (form.querySelector('input[name="phone"]')?.value || '').trim();
     const role = form.querySelector('select[name="role"]')?.value || '';
     const password = form.querySelector('input[name="password"]')?.value || '';
     const termsChecked = form.querySelector('#agreeTerms').checked;
 
     // Validate
-    if (!firstName || !lastName || !email || !phone || !role || !password) {
+    if (!firstName || !lastName || !email || !role || !password) {
         showNotification('Please fill in all required fields', 'error');
         return;
     }
@@ -202,7 +201,6 @@ async function handleRegister(event) {
                 name: `${firstName} ${lastName}`,
                 email,
                 password,
-                phone,
                 role: normalizeRole(role)
             })
         });

@@ -61,7 +61,6 @@ async function loadProfile() {
 
     const profile = data.profile || {};
     document.getElementById('profileName').value = profile.name || '';
-    document.getElementById('profilePhone').value = profile.phone || '';
     document.getElementById('profileEmail').textContent = profile.email || '-';
     document.getElementById('profileRole').textContent = formatRole(profile.role);
     updateDashboardLinks(profile.role);
@@ -73,8 +72,7 @@ async function loadProfile() {
       id: profile.id,
       name: profile.name,
       email: profile.email,
-      role: profile.role,
-      phone: profile.phone
+      role: profile.role
     }));
   } catch (error) {
     console.error('Profile load error:', error);
@@ -88,7 +86,6 @@ async function handleProfileUpdate(event) {
   const token = localStorage.getItem('authToken');
   const saveBtn = document.getElementById('saveBtn');
   const name = document.getElementById('profileName').value.trim();
-  const phone = document.getElementById('profilePhone').value.trim();
 
   if (!name) {
     window.KrishiAuth?.showNotification('Name is required', 'error');
@@ -107,7 +104,7 @@ async function handleProfileUpdate(event) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ name, phone })
+      body: JSON.stringify({ name })
     });
 
     const data = await response.json();
@@ -122,8 +119,7 @@ async function handleProfileUpdate(event) {
     const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
     localStorage.setItem('userData', JSON.stringify({
       ...currentUser,
-      name,
-      phone
+      name
     }));
 
     window.KrishiAuth?.showNotification('Profile updated successfully', 'success');
