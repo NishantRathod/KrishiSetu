@@ -148,7 +148,7 @@ async function handleLogin(event) {
 
     } catch (error) {
         console.error('Login error:', error);
-        showNotification('Connection error. Make sure backend is running on http://localhost:5000', 'error');
+        showNotification('Connection error. Please check that the KrishiSetu backend is available.', 'error');
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
     }
@@ -230,7 +230,7 @@ async function handleRegister(event) {
 
     } catch (error) {
         console.error('Registration error:', error);
-        showNotification('Connection error. Make sure backend is running on http://localhost:5000', 'error');
+        showNotification('Connection error. Please check that the KrishiSetu backend is available.', 'error');
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
     }

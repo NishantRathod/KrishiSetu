@@ -1,1 +1,1 @@
-web: gunicorn --chdir backend wsgi:app --log-file -
+web: gunicorn --chdir backend wsgi:app --bind 0.0.0.0:$PORT --log-file -

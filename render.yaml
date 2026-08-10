@@ -4,7 +4,7 @@ services:
     runtime: python
     rootDir: .
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: gunicorn --chdir backend wsgi:app --log-file -
+    startCommand: gunicorn --chdir backend wsgi:app --bind 0.0.0.0:$PORT --log-file -
     healthCheckPath: /health
     envVars:
       - key: FLASK_ENV
@@ -18,4 +18,4 @@ services:
       - key: MONGO_URI
         sync: false
       - key: CORS_ORIGINS
-        value: https://your-netlify-site.netlify.app
+        value: https://nishantrathod-krishisetu-webapp.netlify.app
