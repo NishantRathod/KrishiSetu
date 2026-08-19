@@ -1,222 +1,2932 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login / Register – KrishiSetu</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/notifications.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KrishiSetu – Login / Registration</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+
   <style>
-    .pw-toggle { position:relative; }
-    .pw-toggle input { padding-right:42px; }
-    .pw-eye {
-      position:absolute; right:14px; top:50%; transform:translateY(-50%);
-      cursor:pointer; font-size:1rem; color:var(--gray); user-select:none;
+    /* =========================================================
+       KRISHISETU ROLE AUTH
+       ========================================================= */
+
+    :root {
+      --auth-green: #176b24;
+      --auth-green-2: #238b32;
+      --auth-light: #eef7ef;
+      --auth-border: #d9dfda;
+      --auth-text: #222;
+      --auth-muted: #777;
     }
-    .strength-bar { height:4px; border-radius:4px; margin-top:6px; background:#eee; overflow:hidden; }
-    .strength-fill { height:100%; border-radius:4px; transition:width 0.3s,background 0.3s; width:0; }
-    .form-hint { font-size:0.74rem; color:var(--gray); margin-top:4px; }
-    .social-login { display:flex; gap:10px; margin-bottom:4px; }
-    .social-login-btn {
-      flex:1; padding:10px; border:1.5px solid #E0E0E0; border-radius:var(--radius-sm);
-      background:var(--white); font-size:0.85rem; font-weight:600; cursor:pointer;
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      transition:all 0.2s; color:var(--text);
+
+    * {
+      box-sizing: border-box;
     }
-    .social-login-btn:hover { border-color:var(--green-primary); background:var(--green-bg); }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    @media(max-width:480px){ .form-row { grid-template-columns:1fr; } }
-    .auth-switch { text-align:center; margin-top:18px; font-size:0.87rem; color:var(--text-muted); }
-    .auth-switch a { color:var(--green-primary); font-weight:700; }
-    .terms-check { display:flex; align-items:flex-start; gap:9px; margin:14px 0; font-size:0.82rem; color:var(--text-muted); }
-    .terms-check input { margin-top:2px; accent-color:var(--green-primary); flex-shrink:0; }
-    .terms-check a { color:var(--green-primary); }
-    .back-home { position:absolute; top:22px; left:28px; font-size:0.85rem; color:rgba(255,255,255,0.7); display:flex; align-items:center; gap:6px; transition:color 0.2s; z-index:10; }
-    .back-home:hover { color:var(--gold); }
-    .register-panel { display:none; }
+
+    body.auth-role-page {
+      margin: 0;
+      min-height: 100vh;
+      background: #f7faf7;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--auth-text);
+    }
+
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 15px;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    .auth-header {
+      background: linear-gradient(
+        145deg,
+        #0e641d,
+        #197a28,
+        #238b32
+      );
+      color: white;
+      border-radius: 28px 28px 0 0;
+      padding: 28px 25px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-header::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      right: -80px;
+      top: -90px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .back-btn {
+      position: relative;
+      z-index: 2;
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      padding: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 22px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .brand-name span {
+      color: #ffd54f;
+    }
+
+    .header-title {
+      position: relative;
+      z-index: 2;
+      font-size: 27px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .header-subtitle {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      color: rgba(255,255,255,0.82);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       MAIN CARD
+       ========================================================= */
+
+    .auth-content {
+      background: white;
+      border-radius: 0 0 28px 28px;
+      padding: 25px 20px 30px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    /* =========================================================
+       ROLE SELECTION
+       ========================================================= */
+
+    .role-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .role-card {
+      width: 100%;
+      background: white;
+      border: 1.5px solid #ddd;
+      border-radius: 20px;
+      padding: 17px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      cursor: pointer;
+      transition: 0.25s ease;
+      text-align: left;
+    }
+
+    .role-card:hover {
+      border-color: var(--auth-green);
+      transform: translateY(-1px);
+      box-shadow: 0 5px 18px rgba(23,107,36,0.10);
+    }
+
+    .role-card.selected {
+      border: 2px solid var(--auth-green);
+      background: #f3faf4;
+    }
+
+    .role-icon {
+      width: 62px;
+      height: 62px;
+      flex-shrink: 0;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 29px;
+    }
+
+    .role-consumer {
+      background: #fff1df;
+    }
+
+    .role-farmer {
+      background: #e8f4e9;
+    }
+
+    .role-processor {
+      background: #e7f0ff;
+    }
+
+    .role-fpo {
+      background: #e5f5f3;
+    }
+
+    .role-shg {
+      background: #f1e6fa;
+    }
+
+    .role-startup {
+      background: #fff0dc;
+    }
+
+    .role-info {
+      flex: 1;
+    }
+
+    .role-name {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .role-description {
+      color: #777;
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+
+    .role-radio {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #bbb;
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .role-card.selected .role-radio {
+      border-color: var(--auth-green);
+    }
+
+    .role-card.selected .role-radio::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: var(--auth-green);
+      border-radius: 50%;
+      top: 4px;
+      left: 4px;
+    }
+
+    /* =========================================================
+       BUTTON
+       ========================================================= */
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 20px;
+      border: none;
+      border-radius: 16px;
+      background: #9bcba0;
+      color: white;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .primary-btn.active {
+      background: var(--auth-green);
+    }
+
+    .primary-btn.active:hover {
+      background: var(--auth-green-2);
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       ROLE FORM
+       ========================================================= */
+
+    .role-form {
+      display: none;
+    }
+
+    .role-form.active {
+      display: block;
+    }
+
+    .form-section {
+      border: 1px solid #dce3dd;
+      background: #fbfdfb;
+      border-radius: 9px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      background: #edf5ee;
+      color: var(--auth-green);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 10px 13px;
+      border-bottom: 1px solid #dce3dd;
+    }
+
+    .section-body {
+      padding: 14px;
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--auth-green);
+      pointer-events: none;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid #dfe3df;
+      border-radius: 12px;
+      padding: 12px 13px 12px 40px;
+      font-size: 13px;
+      outline: none;
+      background: white;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .field textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .field select {
+      padding-left: 13px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--auth-green);
+      box-shadow: 0 0 0 3px rgba(23,107,36,0.08);
+    }
+
+    .password-eye {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #777;
+    }
+
+    .password-input {
+      padding-right: 42px !important;
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 17px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .login-link a {
+      color: var(--auth-green);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .selected-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #e9f5ea;
+      color: var(--auth-green);
+      border-radius: 30px;
+      padding: 7px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    .login-panel {
+      display: none;
+    }
+
+    .login-panel.active {
+      display: block;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 5px;
+      color: var(--auth-green);
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 22px;
+    }
+
+    .role-login-box {
+      background: #f3f8f3;
+      border-radius: 13px;
+      padding: 13px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .role-login-box .small-role-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: white;
+    }
+
+    .role-login-name {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .change-role {
+      font-size: 11px;
+      color: var(--auth-green);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .remember-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin: 8px 0 15px;
+      color: #777;
+    }
+
+    .remember-row label {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .forgot-password {
+      color: var(--auth-green);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .switch-mode {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #777;
+    }
+
+    .switch-mode span {
+      color: var(--auth-green);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 520px) {
+
+      .auth-wrapper {
+        padding: 0;
+        align-items: stretch;
+      }
+
+      .auth-container {
+        max-width: 100%;
+      }
+
+      .auth-header {
+        border-radius: 0 0 30px 30px;
+        padding: 25px 20px 30px;
+      }
+
+      .auth-content {
+        border-radius: 0;
+        box-shadow: none;
+        padding: 22px 15px 30px;
+      }
+
+      .role-card {
+        padding: 14px;
+      }
+
+      .role-icon {
+        width: 56px;
+        height: 56px;
+      }
+
+      .role-name {
+        font-size: 17px;
+      }
+
+      .role-description {
+        font-size: 12.5px;
+      }
+    }
   </style>
 </head>
-<body class="auth-page">
 
-  <!-- Back link -->
-  <a href="index.html" class="back-home">← Back to Home</a>
+<body class="auth-role-page">
 
-  <div class="auth-card">
+<div class="auth-wrapper">
 
-    <!-- Logo -->
-    <div class="auth-logo">
-      <div class="logo-icon">🌾</div>
-      <span class="logo-text">Krishi<span>Setu</span></span>
-    </div>
+  <div class="auth-container">
 
-    <!-- Tabs -->
-    <div class="auth-tabs" id="authTabs">
-      <button class="auth-tab active" data-tab="loginPanel">Login</button>
-      <button class="auth-tab" data-tab="registerPanel">Register</button>
-    </div>
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-    <!-- ===== LOGIN FORM ===== -->
-    <div id="loginPanel" class="auth-form-panel">
-      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:4px;">Welcome back!</h3>
-      <p style="font-size:0.83rem;color:var(--gray);margin-bottom:22px;">Sign in to your KrishiSetu account</p>
+    <div class="auth-header">
 
-      <form data-validate id="loginForm">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" name="email" placeholder="email@example.com" required />
+      <button class="back-btn" onclick="goBack()">←</button>
+
+      <div class="brand">
+        <div class="brand-icon">🌾</div>
+        <div class="brand-name">
+          Krishi<span>Setu</span>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" style="display:flex;justify-content:space-between;">
-            Password
-            <a href="#" style="font-size:0.8rem;color:var(--green-primary);font-weight:600;">Forgot password?</a>
-          </label>
-          <div class="pw-toggle">
-            <input class="form-input" type="password" name="password" id="loginPw" placeholder="Enter your password" required />
-            <span class="pw-eye" onclick="togglePw('loginPw',this)">👁</span>
-          </div>
-        </div>
-
-        <div class="terms-check">
-          <input type="checkbox" id="rememberMe" />
-          <label for="rememberMe">Remember me for 30 days</label>
-        </div>
-
-        <button type="submit" class="btn-auth-submit" data-original="Login to KrishiSetu">Login to KrishiSetu</button>
-      </form>
-
-      <div class="auth-divider"><span>or continue with</span></div>
-
-      <div class="social-login">
-        <button class="social-login-btn">🔵 Google</button>
       </div>
 
-      <div class="auth-switch">
-        Don't have an account? <a href="#" onclick="switchTab('registerPanel')">Register Free</a>
-      </div>
+      <h1 class="header-title" id="headerTitle">
+        I am a...
+      </h1>
+
+      <p class="header-subtitle" id="headerSubtitle">
+        Choose your role to personalize your platform experience.
+      </p>
+
     </div>
 
-    <!-- ===== REGISTER FORM ===== -->
-    <div id="registerPanel" class="auth-form-panel register-panel">
-      <h3 style="font-size:1.1rem;font-weight:800;color:var(--green-dark);margin-bottom:4px;">Create your account</h3>
-      <p style="font-size:0.83rem;color:var(--gray);margin-bottom:22px;">Join India's millet ecosystem — it's free</p>
 
-      <form data-validate id="registerForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <input class="form-input" type="text" name="firstName" placeholder="Nishant" required />
+    <!-- =====================================================
+         CONTENT
+         ===================================================== -->
+
+    <div class="auth-content">
+
+
+      <!-- ===================================================
+           STEP 1 — ROLE SELECTION
+           =================================================== -->
+
+      <div id="roleSelection">
+
+        <div class="role-list">
+
+          <!-- CONSUMER -->
+
+          <div class="role-card"
+               data-role="consumer"
+               onclick="selectRole('consumer')">
+
+            <div class="role-icon role-consumer">
+              🛒
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">Consumer</div>
+
+              <div class="role-description">
+                Buy fresh, traceable millet and farm products
+                directly from verified growers and processors.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
           </div>
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" name="lastName" placeholder="Rathod" required />
+
+
+          <!-- FARMER -->
+
+          <div class="role-card"
+               data-role="farmer"
+               onclick="selectRole('farmer')">
+
+            <div class="role-icon role-farmer">
+              🌱
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">Farmer</div>
+
+              <div class="role-description">
+                Sell your crops at fair prices, connect with
+                buyers, and manage your crop yields.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" name="email" placeholder="email@example.com" required />
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Register As</label>
-          <select class="form-select" name="role" required>
-            <option value="" disabled selected>Select your role</option>
-            <option value="farmer">👨‍🌾 Farmer</option>
-            <option value="fpo">🏘️ FPO (Farmer Producer Org.)</option>
-            <option value="shg">👩‍👧‍👦 SHG (Self-Help Group)</option>
-            <option value="processor">🏭 Processor / Manufacturer</option>
-            <option value="consumer">🛍️ Consumer / Buyer</option>
-            <option value="startup">🚀 Startup / Entrepreneur</option>
-          </select>
-        </div>
+          <!-- PROCESSOR -->
 
-        <div class="form-group">
-          <label class="form-label">State</label>
-          <select class="form-select" name="state">
-            <option value="" disabled selected>Select state</option>
-            <option value="maharashtra">Maharashtra</option>
-            <option value="karnataka">Karnataka</option>
-            <option value="rajasthan">Rajasthan</option>
-            <option value="telangana">Telangana</option>
-            <option value="tamil_nadu">Tamil Nadu</option>
-            <option value="madhya_pradesh">Madhya Pradesh</option>
-            <option value="andhra_pradesh">Andhra Pradesh</option>
-            <option value="odisha">Odisha</option>
-            <option value="gujarat">Gujarat</option>
-            <option value="uttar_pradesh">Uttar Pradesh</option>
-          </select>
-        </div>
+          <div class="role-card"
+               data-role="processor"
+               onclick="selectRole('processor')">
 
-        <div class="form-group">
-          <label class="form-label">Create Password</label>
-          <div class="pw-toggle">
-            <input class="form-input" type="password" name="password" id="regPw" placeholder="Min. 8 characters" required oninput="checkStrength(this.value)" />
-            <span class="pw-eye" onclick="togglePw('regPw',this)">👁</span>
+            <div class="role-icon role-processor">
+              🏭
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">Processor</div>
+
+              <div class="role-description">
+                Source raw millets directly from farmers/FPOs,
+                process them, and supply value-added goods.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
           </div>
-          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-          <div class="form-hint" id="strengthText">Password strength will appear here</div>
+
+
+          <!-- FPO -->
+
+          <div class="role-card"
+               data-role="fpo"
+               onclick="selectRole('fpo')">
+
+            <div class="role-icon role-fpo">
+              🏢
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">FPO / Cooperative</div>
+
+              <div class="role-description">
+                Aggregate member farmer yields, command better
+                market rates, and manage bulk trade operations.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
+          </div>
+
+
+          <!-- SHG -->
+
+          <div class="role-card"
+               data-role="shg"
+               onclick="selectRole('shg')">
+
+            <div class="role-icon role-shg">
+              👩‍👩‍👧
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">
+                Self Help Group (Bachat Gat)
+              </div>
+
+              <div class="role-description">
+                Empower your group members and sell millet
+                products directly to buyers.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
+          </div>
+
+
+          <!-- STARTUP -->
+
+          <div class="role-card"
+               data-role="startup"
+               onclick="selectRole('startup')">
+
+            <div class="role-icon role-startup">
+              🚀
+            </div>
+
+            <div class="role-info">
+              <div class="role-name">
+                Startup / Entrepreneur
+              </div>
+
+              <div class="role-description">
+                Build innovative solutions and participate
+                in the millet ecosystem.
+              </div>
+            </div>
+
+            <div class="role-radio"></div>
+
+          </div>
+
         </div>
 
-        <div class="terms-check">
-          <input type="checkbox" id="agreeTerms" required />
-          <label for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of KrishiSetu</label>
+
+        <button id="continueBtn"
+                class="primary-btn"
+                onclick="openSelectedRole()">
+          Continue
+        </button>
+
+        <div class="login-link">
+          Already have an account?
+          <a onclick="openLogin()">Sign In</a>
         </div>
 
-        <button type="submit" class="btn-auth-submit" data-original="Create Free Account">Create Free Account</button>
-      </form>
-
-      <div class="auth-switch">
-        Already have an account? <a href="#" onclick="switchTab('loginPanel')">Login</a>
       </div>
+
+
+      <!-- ===================================================
+           ROLE REGISTRATION FORMS
+           =================================================== -->
+
+      <div id="registrationArea">
+
+
+        <!-- =================================================
+             FARMER
+             ================================================= -->
+
+        <form id="farmerForm"
+              class="role-form"
+              data-role="farmer">
+
+          <div class="selected-role-badge">
+            🌱 Farmer Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Personal & Security Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Full Name</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Set Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="farmerPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('farmerPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="farmerConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              📍 Location Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="two-columns">
+
+                <div class="field">
+                  <label>State</label>
+
+                  <input
+                    type="text"
+                    name="state"
+                    placeholder="e.g. Maharashtra"
+                    required>
+                </div>
+
+                <div class="field">
+                  <label>District</label>
+
+                  <input
+                    type="text"
+                    name="district"
+                    placeholder="e.g. Kolhapur"
+                    required>
+                </div>
+
+              </div>
+
+
+              <div class="two-columns">
+
+                <div class="field">
+                  <label>Taluka</label>
+
+                  <input
+                    type="text"
+                    name="taluka"
+                    placeholder="Enter your taluka"
+                    required>
+                </div>
+
+                <div class="field">
+                  <label>Village</label>
+
+                  <input
+                    type="text"
+                    name="village"
+                    placeholder="Enter your village"
+                    required>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              🌾 Farm Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>
+                  Farm Area (Acres / Guntha)
+                </label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📐</span>
+
+                  <input
+                    type="text"
+                    name="farm_area"
+                    placeholder="e.g. 2.5 Acres or 10 Guntha"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create Farmer Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             PROCESSOR
+             ================================================= -->
+
+        <form id="processorForm"
+              class="role-form"
+              data-role="processor">
+
+          <div class="selected-role-badge">
+            🏭 Processor Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Contact Person & Security
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Contact Person Name</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter full name"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Set Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="processorPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('processorPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="processorConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              🏭 Processing Unit Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Processing Unit / Business Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🏭</span>
+
+                  <input
+                    type="text"
+                    name="business_name"
+                    placeholder="e.g. Shree Grain Processors Ltd."
+                    required>
+
+                </div>
+
+              </div>
+
+
+              <div class="field">
+                <label>FSSAI / License Number</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🛡️</span>
+
+                  <input
+                    type="text"
+                    name="license_number"
+                    placeholder="e.g. 14-digit FSSAI Reg. No.">
+
+                </div>
+
+              </div>
+
+
+              <div class="field">
+                <label>Processing Specialty / Type</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">⚙️</span>
+
+                  <input
+                    type="text"
+                    name="processing_type"
+                    placeholder="e.g. De-husking, Flour Milling">
+
+                </div>
+
+              </div>
+
+
+              <div class="field">
+                <label>
+                  Processing Capacity
+                  (Tons / Quintals per month)
+                </label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📊</span>
+
+                  <input
+                    type="text"
+                    name="capacity"
+                    placeholder="e.g. 50 Tons/Month">
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              📍 Facility Location Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+
+                <label>Facility Address & Location</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📍</span>
+
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="MIDC / Industrial Area, City, District"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create Processor Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             FPO
+             ================================================= -->
+
+        <form id="fpoForm"
+              class="role-form"
+              data-role="fpo">
+
+          <div class="selected-role-badge">
+            🏢 FPO Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Authorized Person Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Authorized Person Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter full name"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Set Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="fpoPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('fpoPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="fpoConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              🏢 FPO Organization Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>FPO Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🏢</span>
+
+                  <input
+                    type="text"
+                    name="organization_name"
+                    placeholder="Enter full FPO name"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>FPO Registration Number</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📋</span>
+
+                  <input
+                    type="text"
+                    name="registration_number"
+                    placeholder="e.g. U01409MH2020PTC123456">
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Number of Associated Farmers</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👨‍🌾</span>
+
+                  <input
+                    type="number"
+                    name="farmers_count"
+                    placeholder="e.g. 250"
+                    min="1">
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              📍 Location Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="two-columns">
+
+                <div class="field">
+                  <label>State</label>
+
+                  <input
+                    type="text"
+                    name="state"
+                    placeholder="e.g. Maharashtra"
+                    required>
+                </div>
+
+                <div class="field">
+                  <label>District</label>
+
+                  <input
+                    type="text"
+                    name="district"
+                    placeholder="e.g. Kolhapur"
+                    required>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create FPO Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             SHG
+             ================================================= -->
+
+        <form id="shgForm"
+              class="role-form"
+              data-role="shg">
+
+          <div class="selected-role-badge">
+            👩‍👩‍👧 SHG Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Group Representative & Security
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Representative Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter name of leader/head"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Set Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="shgPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('shgPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="shgConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👥 Self Help Group (बचत गट) Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>SHG Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👥</span>
+
+                  <input
+                    type="text"
+                    name="group_name"
+                    placeholder="e.g. Mahila Bachat Gat"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>SHG Registration / ID No. (Optional)</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📋</span>
+
+                  <input
+                    type="text"
+                    name="group_id"
+                    placeholder="Government Reg. No. or Bank Account">
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Number of Members</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👥</span>
+
+                  <input
+                    type="number"
+                    name="members"
+                    placeholder="e.g. 10 or 15"
+                    min="1"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Primary Activity / Product</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🌾</span>
+
+                  <input
+                    type="text"
+                    name="activity"
+                    placeholder="e.g. Millet Processing, Food Items">
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              📍 Location Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+
+                <label>Location Info</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📍</span>
+
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="Village, Taluka, District & State"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create SHG Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             CONSUMER
+             ================================================= -->
+
+        <form id="consumerForm"
+              class="role-form"
+              data-role="consumer">
+
+          <div class="selected-role-badge">
+            🛒 Consumer Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Personal & Security Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Full Name</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="consumerPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('consumerPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="consumerConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              📍 Delivery Location
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Address</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📍</span>
+
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="Enter delivery address"
+                    required>
+
+                </div>
+
+              </div>
+
+              <div class="two-columns">
+
+                <div class="field">
+                  <label>City</label>
+
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    required>
+                </div>
+
+                <div class="field">
+                  <label>Pincode</label>
+
+                  <input
+                    type="text"
+                    name="pincode"
+                    placeholder="416101"
+                    required>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create Consumer Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             STARTUP
+             ================================================= -->
+
+        <form id="startupForm"
+              class="role-form"
+              data-role="startup">
+
+          <div class="selected-role-badge">
+            🚀 Startup / Entrepreneur Registration
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              👤 Founder & Security Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Founder / Contact Person</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">👤</span>
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter full name"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Mobile Number</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">📞</span>
+
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 10-digit mobile number"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Email Address</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">✉️</span>
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter e-mail address"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Set Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="password"
+                    class="password-input"
+                    id="startupPassword"
+                    placeholder="At least 8 characters"
+                    required>
+
+                  <span
+                    class="password-eye"
+                    onclick="togglePassword('startupPassword',this)">
+                    👁
+                  </span>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🔒</span>
+
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    class="password-input"
+                    id="startupConfirmPassword"
+                    placeholder="Confirm your password"
+                    required>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="section-title">
+              🚀 Startup Details
+            </div>
+
+            <div class="section-body">
+
+              <div class="field">
+                <label>Startup / Business Name</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🏢</span>
+
+                  <input
+                    type="text"
+                    name="business_name"
+                    placeholder="Enter startup name"
+                    required>
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Business Category</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">💡</span>
+
+                  <input
+                    type="text"
+                    name="category"
+                    placeholder="e.g. AgriTech, FoodTech">
+
+                </div>
+              </div>
+
+
+              <div class="field">
+                <label>Website</label>
+
+                <div class="input-wrap">
+
+                  <span class="input-icon">🌐</span>
+
+                  <input
+                    type="url"
+                    name="website"
+                    placeholder="https://example.com">
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="primary-btn active">
+            Create Startup Account
+          </button>
+
+        </form>
+
+
+        <!-- =================================================
+             LOGIN
+             ================================================= -->
+
+        <div id="loginPanel" class="login-panel">
+
+          <div class="login-title">
+            Welcome Back!
+          </div>
+
+          <div class="login-subtitle">
+            Sign in to your KrishiSetu account
+          </div>
+
+
+          <div class="role-login-box">
+
+            <div
+              id="loginRoleIcon"
+              class="small-role-icon">
+              🌾
+            </div>
+
+            <div>
+
+              <div
+                id="loginRoleName"
+                class="role-login-name">
+                KrishiSetu User
+              </div>
+
+              <div
+                class="change-role"
+                onclick="changeRole()">
+                Change role
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <form id="loginForm">
+
+            <div class="field">
+
+              <label>Email / Mobile Number</label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  📱
+                </span>
+
+                <input
+                  type="text"
+                  name="email"
+                  placeholder="Enter email or mobile number"
+                  required>
+
+              </div>
+
+            </div>
+
+
+            <div class="field">
+
+              <label>Password</label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  🔒
+                </span>
+
+                <input
+                  type="password"
+                  name="password"
+                  class="password-input"
+                  id="loginPassword"
+                  placeholder="Enter your password"
+                  required>
+
+                <span
+                  class="password-eye"
+                  onclick="togglePassword('loginPassword',this)">
+                  👁
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="remember-row">
+
+              <label>
+                <input
+                  type="checkbox"
+                  id="rememberMe">
+
+                Remember me
+              </label>
+
+              <span class="forgot-password">
+                Forgot password?
+              </span>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="primary-btn active">
+
+              Login to KrishiSetu
+
+            </button>
+
+          </form>
+
+
+          <div class="switch-mode">
+
+            Don't have an account?
+
+            <span onclick="changeRole()">
+              Register Free
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
-  <script src="js/config.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/auth.js"></script>
-  <script>
-    function switchTab(panelId) {
-      document.querySelectorAll('.auth-form-panel').forEach(p => p.style.display = 'none');
-      document.getElementById(panelId).style.display = 'block';
-      document.querySelectorAll('.auth-tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.tab === panelId);
-      });
+</div>
+
+
+<!-- =========================================================
+     EXISTING PROJECT SCRIPTS
+     ========================================================= -->
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+
+
+<script>
+
+  /* =========================================================
+     ROLE DATA
+     ========================================================= */
+
+  const roleData = {
+
+    farmer: {
+      name: "Farmer",
+      icon: "🌱"
+    },
+
+    processor: {
+      name: "Processor",
+      icon: "🏭"
+    },
+
+    fpo: {
+      name: "FPO / Cooperative",
+      icon: "🏢"
+    },
+
+    shg: {
+      name: "Self Help Group",
+      icon: "👩‍👩‍👧"
+    },
+
+    consumer: {
+      name: "Consumer",
+      icon: "🛒"
+    },
+
+    startup: {
+      name: "Startup / Entrepreneur",
+      icon: "🚀"
     }
 
-    document.querySelectorAll('.auth-tab').forEach(tab => {
-      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  };
+
+
+  let selectedRole = null;
+
+
+  /* =========================================================
+     SELECT ROLE
+     ========================================================= */
+
+  function selectRole(role) {
+
+    selectedRole = role;
+
+    document
+      .querySelectorAll(".role-card")
+      .forEach(card => {
+
+        card.classList.remove("selected");
+
+      });
+
+
+    const card =
+      document.querySelector(
+        `.role-card[data-role="${role}"]`
+      );
+
+
+    if (card) {
+
+      card.classList.add("selected");
+
+    }
+
+
+    document
+      .getElementById("continueBtn")
+      .classList.add("active");
+
+  }
+
+
+  /* =========================================================
+     OPEN ROLE FORM
+     ========================================================= */
+
+  function openSelectedRole() {
+
+    if (!selectedRole) {
+
+      alert("Please select your role first.");
+
+      return;
+
+    }
+
+
+    document
+      .getElementById("roleSelection")
+      .style.display = "none";
+
+
+    document
+      .querySelectorAll(".role-form")
+      .forEach(form => {
+
+        form.classList.remove("active");
+
+      });
+
+
+    const form =
+      document.getElementById(
+        selectedRole + "Form"
+      );
+
+
+    if (form) {
+
+      form.classList.add("active");
+
+    }
+
+
+    document.getElementById("headerTitle").textContent =
+      `Register as ${roleData[selectedRole].name}`;
+
+
+    document.getElementById("headerSubtitle").textContent =
+      "Create your KrishiSetu account to get started.";
+
+  }
+
+
+  /* =========================================================
+     LOGIN
+     ========================================================= */
+
+  function openLogin() {
+
+    document
+      .getElementById("roleSelection")
+      .style.display = "none";
+
+
+    document
+      .querySelectorAll(".role-form")
+      .forEach(form => {
+
+        form.classList.remove("active");
+
+      });
+
+
+    document
+      .getElementById("loginPanel")
+      .classList.add("active");
+
+
+    if (!selectedRole) {
+
+      selectedRole = "farmer";
+
+    }
+
+
+    updateLoginRole();
+
+
+    document.getElementById("headerTitle").textContent =
+      "Welcome Back!";
+
+
+    document.getElementById("headerSubtitle").textContent =
+      "Login to your KrishiSetu account.";
+
+  }
+
+
+  /* =========================================================
+     UPDATE LOGIN ROLE
+     ========================================================= */
+
+  function updateLoginRole() {
+
+    const data = roleData[selectedRole];
+
+    if (!data) return;
+
+
+    document.getElementById(
+      "loginRoleIcon"
+    ).textContent = data.icon;
+
+
+    document.getElementById(
+      "loginRoleName"
+    ).textContent = data.name;
+
+  }
+
+
+  /* =========================================================
+     CHANGE ROLE
+     ========================================================= */
+
+  function changeRole() {
+
+    document
+      .getElementById("loginPanel")
+      .classList.remove("active");
+
+
+    document
+      .querySelectorAll(".role-form")
+      .forEach(form => {
+
+        form.classList.remove("active");
+
+      });
+
+
+    document
+      .getElementById("roleSelection")
+      .style.display = "block";
+
+
+    document.getElementById("headerTitle").textContent =
+      "I am a...";
+
+
+    document.getElementById("headerSubtitle").textContent =
+      "Choose your role to personalize your platform experience.";
+
+  }
+
+
+  /* =========================================================
+     BACK BUTTON
+     ========================================================= */
+
+  function goBack() {
+
+    const registrationVisible =
+      document.querySelector(
+        ".role-form.active"
+      );
+
+
+    const loginVisible =
+      document
+        .getElementById("loginPanel")
+        .classList.contains("active");
+
+
+    if (registrationVisible || loginVisible) {
+
+      changeRole();
+
+      return;
+
+    }
+
+
+    window.location.href = "index.html";
+
+  }
+
+
+  /* =========================================================
+     PASSWORD TOGGLE
+     ========================================================= */
+
+  function togglePassword(id, icon) {
+
+    const input =
+      document.getElementById(id);
+
+
+    if (input.type === "password") {
+
+      input.type = "text";
+
+      icon.textContent = "🙈";
+
+    } else {
+
+      input.type = "password";
+
+      icon.textContent = "👁";
+
+    }
+
+  }
+
+
+  /* =========================================================
+     FORM TO JSON
+     ========================================================= */
+
+  function formToJSON(form) {
+
+    const data = {};
+
+    const formData =
+      new FormData(form);
+
+
+    formData.forEach((value, key) => {
+
+      data[key] = value;
+
     });
 
-    function togglePw(id, icon) {
-      const input = document.getElementById(id);
-      if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; }
-      else { input.type = 'password'; icon.textContent = '👁'; }
-    }
 
-    function checkStrength(val) {
-      const fill = document.getElementById('strengthFill');
-      const text = document.getElementById('strengthText');
-      if (!val) { fill.style.width = '0'; text.textContent = ''; return; }
-      let score = 0;
-      if (val.length >= 8) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[^A-Za-z0-9]/.test(val)) score++;
-      const levels = [
-        { w:'20%', c:'#EF5350', t:'Weak' },
-        { w:'45%', c:'#FFA726', t:'Fair' },
-        { w:'72%', c:'#66BB6A', t:'Good' },
-        { w:'100%', c:'#2E7D32', t:'Strong 🔒' }
-      ];
-      const l = levels[score - 1] || levels[0];
-      fill.style.width = l.w; fill.style.background = l.c;
-      text.textContent = l.t; text.style.color = l.c;
-    }
+    return data;
 
-    // Show login panel by default; hide register
-    document.getElementById('registerPanel').style.display = 'none';
-  </script>
+  }
+
+
+  /* =========================================================
+     REGISTRATION
+     ========================================================= */
+
+  document
+    .querySelectorAll(".role-form")
+    .forEach(form => {
+
+      form.addEventListener(
+        "submit",
+        async function(event) {
+
+          event.preventDefault();
+
+
+          const submitBtn =
+            form.querySelector(
+              "button[type='submit']"
+            );
+
+
+          const originalText =
+            submitBtn.textContent;
+
+
+          const data =
+            formToJSON(form);
+
+
+          const password =
+            data.password || "";
+
+
+          const confirmPassword =
+            data.confirmPassword || "";
+
+
+          /* Password validation */
+
+          if (password.length < 8) {
+
+            alert(
+              "Password must be at least 8 characters."
+            );
+
+            return;
+
+          }
+
+
+          if (
+            confirmPassword &&
+            password !== confirmPassword
+          ) {
+
+            alert(
+              "Passwords do not match."
+            );
+
+            return;
+
+          }
+
+
+          /* Add role */
+
+          data.role = form.dataset.role;
+
+
+          /*
+           * Remove confirmPassword before
+           * sending it to backend.
+           */
+
+          delete data.confirmPassword;
+
+
+          try {
+
+            submitBtn.disabled = true;
+
+            submitBtn.textContent =
+              "Creating Account...";
+
+
+            const response =
+              await fetch(
+                `${API_BASE_URL}/auth/register`,
+                {
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type":
+                      "application/json"
+                  },
+
+                  body:
+                    JSON.stringify(data)
+                }
+              );
+
+
+            const result =
+              await response.json();
+
+
+            if (!response.ok) {
+
+              throw new Error(
+                result.error ||
+                "Registration failed"
+              );
+
+            }
+
+
+            /* Existing auth.js functions */
+
+            if (
+              typeof storeToken ===
+              "function"
+            ) {
+
+              storeToken(
+                result.access_token
+              );
+
+            } else {
+
+              localStorage.setItem(
+                "authToken",
+                result.access_token
+              );
+
+            }
+
+
+            if (
+              typeof storeUserData ===
+              "function"
+            ) {
+
+              storeUserData(
+                result.user
+              );
+
+            } else {
+
+              localStorage.setItem(
+                "userData",
+                JSON.stringify(result.user)
+              );
+
+            }
+
+
+            submitBtn.textContent =
+              "✓ Account Created";
+
+
+            setTimeout(() => {
+
+              const dashboardMap = {
+
+                farmer:
+                  "dashboard-farmer.html",
+
+                processor:
+                  "dashboard-processor.html",
+
+                fpo:
+                  "dashboard-fpo.html",
+
+                shg:
+                  "dashboard-shg.html",
+
+                consumer:
+                  "dashboard-consumer.html",
+
+                startup:
+                  "dashboard-startup.html"
+
+              };
+
+
+              window.location.href =
+                dashboardMap[data.role] ||
+                "dashboard.html";
+
+            }, 1000);
+
+
+          } catch (error) {
+
+            console.error(
+              "Registration error:",
+              error
+            );
+
+
+            alert(
+              error.message ||
+              "Registration failed."
+            );
+
+
+            submitBtn.disabled = false;
+
+            submitBtn.textContent =
+              originalText;
+
+          }
+
+        }
+      );
+
+    });
+
+
+  /* =========================================================
+     LOGIN
+     ========================================================= */
+
+  document
+    .getElementById("loginForm")
+    .addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const form = event.target;
+
+
+        const submitBtn =
+          form.querySelector(
+            "button[type='submit']"
+          );
+
+
+        const identifier =
+          form
+            .querySelector(
+              "input[name='email']"
+            )
+            .value
+            .trim();
+
+
+        const password =
+          form
+            .querySelector(
+              "input[name='password']"
+            )
+            .value;
+
+
+        if (!identifier || !password) {
+
+          alert(
+            "Please enter email/mobile and password."
+          );
+
+          return;
+
+        }
+
+
+        try {
+
+          submitBtn.disabled = true;
+
+          submitBtn.textContent =
+            "Logging in...";
+
+
+          const response =
+            await fetch(
+              `${API_BASE_URL}/auth/login`,
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                  identifier:
+                    identifier,
+
+                  email:
+                    identifier,
+
+                  password:
+                    password
+
+                })
+
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          if (!response.ok) {
+
+            throw new Error(
+              result.error ||
+              "Invalid login credentials."
+            );
+
+          }
+
+
+          localStorage.setItem(
+            "authToken",
+            result.access_token
+          );
+
+
+          localStorage.setItem(
+            "userData",
+            JSON.stringify(result.user)
+          );
+
+
+          submitBtn.textContent =
+            "✓ Login Successful";
+
+
+          const role =
+            result.user.role;
+
+
+          const dashboardMap = {
+
+            farmer:
+              "dashboard-farmer.html",
+
+            processor:
+              "dashboard-processor.html",
+
+            fpo:
+              "dashboard-fpo.html",
+
+            shg:
+              "dashboard-shg.html",
+
+            consumer:
+              "dashboard-consumer.html",
+
+            startup:
+              "dashboard-startup.html"
+
+          };
+
+
+          setTimeout(() => {
+
+            window.location.href =
+              dashboardMap[role] ||
+              "dashboard.html";
+
+          }, 700);
+
+
+        } catch (error) {
+
+          console.error(
+            "Login error:",
+            error
+          );
+
+
+          alert(
+            error.message ||
+            "Unable to login."
+          );
+
+
+          submitBtn.disabled = false;
+
+          submitBtn.textContent =
+            "Login to KrishiSetu";
+
+        }
+
+      }
+    );
+
+
+</script>
+
 </body>
 </html>
