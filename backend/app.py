@@ -97,11 +97,11 @@ def create_app(config_name='default'):
 
     return app
 
+app = create_app(os.getenv('FLASK_ENV', 'production'))
+
 if __name__ == '__main__':
-    env = os.getenv('FLASK_ENV', 'development')
-    app = create_app(env)
     app.run(
         host='0.0.0.0',
-        port=app.config['PORT'],
-        debug=app.config['DEBUG']
+        port=int(os.getenv('PORT', 5000)),
+        debug=app.config.get('DEBUG', False)
     )
